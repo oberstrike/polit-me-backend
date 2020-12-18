@@ -2,12 +2,19 @@ package de.maju.subject
 
 import com.maju.openapi.annotations.OASSchema
 import de.maju.question.QuestionDTO
-import javax.validation.constraints.NotBlank
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
+import org.eclipse.microprofile.openapi.annotations.media.Schema
 
-@OASSchema("SubjectDTO")
+@OASSchema("Subject")
+@Schema(name = "Subject")
 data class SubjectDTO(
-    override val id: Long? = null,
-    @NotBlank(message = "The content of the subject may not be blank")
-    override val content: String,
-    override val questions: List<QuestionDTO>
-): ISubjectDTO
+    val id: Long? = null,
+    val content: String,
+    var headline: String = "",
+    @get:Schema(
+        type = SchemaType.ARRAY,
+        maxItems = 100,
+        ref = "#/components/schemas/QuestionDTO"
+    )
+    val questions: List<QuestionDTO>
+)

@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.config
 
 
 import com.main.ResponseError
