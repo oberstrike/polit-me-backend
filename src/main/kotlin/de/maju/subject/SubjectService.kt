@@ -11,6 +11,9 @@ class SubjectService {
     lateinit var subjectRepository: SubjectRepository
 
     @Inject
+    lateinit var subjectRepositoryProxy: SubjectRepositoryProxy
+
+    @Inject
     lateinit var subjectMapper: SubjectMapper
 
     fun findById(id: Long): SubjectDTO? {
@@ -20,9 +23,7 @@ class SubjectService {
 
     @Transactional
     fun add(subjectDTO: SubjectDTO): SubjectDTO {
-        val subject = subjectMapper.convertDTOToModel(subjectDTO)
-        subjectRepository.save(subject)
-        return subjectMapper.convertModelToDTO(subject)
+        return subjectRepositoryProxy.save(subjectDTO)
     }
 
     @Transactional
@@ -38,5 +39,9 @@ class SubjectService {
         val subject = subjectMapper.convertDTOToModel(subjectDTO)
         subjectRepository.persist(subject)
         return subjectDTO
+    }
+
+    fun findAll(): List<SubjectDTO> {
+        return subjectRepositoryProxy.getAll()
     }
 }

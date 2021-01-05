@@ -24,6 +24,9 @@ class SubjectResource(
     private val validator: Validator
 ) :ISubjectResource {
 
+    @OASPath(path = "/all")
+    override fun findAll() = subjectService.findAll()
+
 
     @OASPath(path = "/id/{id}")
     override fun findById(@PathParam("id") id: Long): SubjectDTO? {

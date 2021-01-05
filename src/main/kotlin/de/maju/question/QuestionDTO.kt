@@ -7,7 +7,7 @@ import de.maju.subject.SubjectDTO
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 
 @OASSchema("Question")
-@Schema(name = "Question")
+@Schema(name = "QuestionDTO")
 data class QuestionDTO(
     override var id: Long,
     @OASProperty(baseSchema = OASBaseSchemaEnum.FILE)

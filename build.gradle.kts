@@ -8,6 +8,7 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven(url = "https://dl.bintray.com/oberstrike/maven")
 }
 
 val quarkusPlatformGroupId: String by project
@@ -19,7 +20,9 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.4.1.Final")
     implementation("com.maju.openapi:oas-generator:1.0.0")
     kapt("com.maju.openapi:oas-generator:1.0.0")
-
+    implementation("com.maju.proxy:proxy-generator:1.0.0")
+    kapt("com.maju.proxy:proxy-generator:1.0.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
 
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-keycloak-authorization")

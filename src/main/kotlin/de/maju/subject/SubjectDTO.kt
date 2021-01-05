@@ -1,5 +1,6 @@
 package de.maju.subject
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.maju.openapi.annotations.OASSchema
 import de.maju.question.QuestionDTO
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
@@ -16,5 +17,5 @@ data class SubjectDTO(
         maxItems = 100,
         ref = "#/components/schemas/QuestionDTO"
     )
-    val questions: List<QuestionDTO>
+    val questions: List<QuestionDTO> = listOf()
 )
