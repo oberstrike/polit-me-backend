@@ -8,17 +8,11 @@ import javax.transaction.Transactional
 class SubjectService {
 
     @Inject
-    lateinit var subjectRepository: SubjectRepository
-
-    @Inject
     lateinit var subjectRepositoryProxy: SubjectRepositoryProxy
 
-    @Inject
-    lateinit var subjectMapper: SubjectMapper
 
     fun findById(id: Long): SubjectDTO? {
-        val subject = subjectRepository.findById(id) ?: return null
-        return subjectMapper.convertModelToDTO(subject)
+        return subjectRepositoryProxy.findById(id)
     }
 
     @Transactional
@@ -29,15 +23,12 @@ class SubjectService {
     @Transactional
     fun delete(subjectDTO: SubjectDTO): Boolean {
         if (subjectDTO.id == null) return false
-        return subjectRepository.deleteById(subjectDTO.id)
+        return subjectRepositoryProxy.deleteById(subjectDTO.id)
     }
 
     @Transactional
     fun put(subjectDTO: SubjectDTO): SubjectDTO? {
         if (subjectDTO.id == null) return null
-        subjectRepository.findById(subjectDTO.id) ?: return null
-        val subject = subjectMapper.convertDTOToModel(subjectDTO)
-        subjectRepository.persist(subject)
         return subjectDTO
     }
 

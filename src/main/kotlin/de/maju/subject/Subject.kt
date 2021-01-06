@@ -32,4 +32,5 @@ class SubjectRepository : PanacheRepository<Subject> {
     fun getAll(): List<Subject> {
         return findAll().list()
     }
+
 }

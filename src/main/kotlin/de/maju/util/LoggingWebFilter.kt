@@ -9,7 +9,7 @@ import javax.servlet.ServletResponse
 import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
 
-@ApplicationScoped
+@WebFilter("/*")
 class LoggingWebFilter : Filter {
 
 
@@ -23,7 +23,9 @@ class LoggingWebFilter : Filter {
         val method = httpServletRequest.method
         val contentLength = httpServletRequest.contentLength
 
-        LOG.info("[URI: $uri, method: $method, query: ${request.queryString}, content-length: $contentLength ]")
+        val message = "[URI: $uri, method: $method, query: ${request.queryString}, content-length: $contentLength ]"
+        LOG.info(message)
+
         chain.doFilter(request, response)
     }
 

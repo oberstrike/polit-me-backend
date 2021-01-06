@@ -12,10 +12,5 @@ data class SubjectDTO(
     val id: Long? = null,
     val content: String,
     var headline: String = "",
-    @get:Schema(
-        type = SchemaType.ARRAY,
-        maxItems = 100,
-        ref = "#/components/schemas/QuestionDTO"
-    )
     val questions: List<QuestionDTO> = listOf()
 )
