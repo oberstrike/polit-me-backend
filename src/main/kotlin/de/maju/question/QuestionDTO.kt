@@ -9,8 +9,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema
 @OASSchema("Question")
 @Schema(name = "QuestionDTO")
 data class QuestionDTO(
-    override var id: Long,
+    override val owner: String,
+    override val subject: Long? = null,
+    override var id: Long? = null,
     @OASProperty(baseSchema = OASBaseSchemaEnum.FILE)
-    override val content: ByteArray,
-    override val subject: Long
-): IQuestionDTO
+    override val content: ByteArray
+) : IQuestionDTO

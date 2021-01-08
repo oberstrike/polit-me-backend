@@ -46,6 +46,19 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("io.quarkus:quarkus-panache-mock")
+    testImplementation("io.rest-assured:kotlin-extensions")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.quarkus:quarkus-junit5-mockito")
+    testImplementation("org.testcontainers:testcontainers:1.15.1")
+    testImplementation("org.testcontainers:junit-jupiter:1.15.1")
+    testImplementation("com.github.dasniko:testcontainers-keycloak:1.3.3")
+    testImplementation("org.testcontainers:postgresql:1.15.1")
+    testImplementation("org.testcontainers:junit-jupiter")
+
+    val junitJupiterVersion = "5.4.2"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 
 
 }
