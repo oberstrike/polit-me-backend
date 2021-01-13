@@ -30,6 +30,8 @@ class SubjectService {
 
     @Transactional
     fun add(subjectDTO: SubjectDTO): SubjectDTO {
+        if(subjectDTO.id != null) throw BadRequestException("An ID was entered by mistake.")
+        if(subjectDTO.created != 0L) throw BadRequestException("A date was entered accidentally.")
         return subjectRepositoryProxy.save(subjectDTO)
     }
 
@@ -78,11 +80,14 @@ class SubjectService {
 
         if (questionDTO.id != null) throw BadRequestException("The requested question has already an ID.")
         val question = questionRepositoryProxy.converter.convertDTOToModel(questionDTO)
-        question.subject = subject
 
-        val savedQuestion = questionRepository.save(question)
-        subject.questions.add(savedQuestion)
-
+        subject.addQuestion(question)
+        questionRepository.save(question)
         return subjectRepositoryProxy.converter.convertModelToDTO(subject)
+    }
+
+    fun getQuestionsBySubjectId(id: Long, page: Int, pageSize: Int): List<QuestionDTO> {
+        return questionRepositoryProxy.findBySubjectId(id, page, pageSize)
+
     }
 }

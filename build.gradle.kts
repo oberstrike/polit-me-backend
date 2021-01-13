@@ -39,7 +39,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-flyway")
+
     implementation("io.quarkus:quarkus-undertow")
+    implementation("org.jadira.usertype:usertype.core:7.0.0.CR1")
 
     implementation("io.quarkus:quarkus-resteasy")
     testImplementation("io.quarkus:quarkus-test-security")

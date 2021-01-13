@@ -105,12 +105,8 @@ class SubjectResourceTest : AbstractRestTest() {
 
             val result = subjectController.addQuestionToSubject(it, question)
             Assertions.assertNotNull(result)
-            assert(result!!.questions.isNotEmpty())
-
-
+            Assert.assertEquals(1, result!!.questions.size)
         }
-
-
     }
 
 }

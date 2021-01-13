@@ -1,9 +1,12 @@
 package de.maju.question
 
 import com.maju.annotations.RepositoryProxy
+import de.maju.comments.Comment
 import de.maju.subject.Subject
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheQuery
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
+import io.quarkus.panache.common.Page
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.*
 
@@ -16,8 +19,36 @@ class Question(
     @JoinColumn(name = "subject_id")
     var subject: Subject? = null
 
+    @OneToMany(
+        mappedBy = "question",
+        cascade = [CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE],
+        orphanRemoval = true
+    )
+    var comments: MutableList<Comment> = mutableListOf()
+
+    var isPublic: Boolean = false
+
     @Lob
     var content: ByteArray = ByteArray(0)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Question) return false
+
+        if (owner != other.owner) return false
+        if (subject != other.subject) return false
+        if (!content.contentEquals(other.content)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = owner.hashCode()
+        result = 31 * result + (subject?.hashCode() ?: 0)
+        result = 31 * result + content.contentHashCode()
+        return result
+    }
+
+
 }
 
 @ApplicationScoped
@@ -35,8 +66,16 @@ class QuestionRepository : PanacheRepository<Question> {
         val question = findById(questionToUpdate.id!!) ?: return null
         question.subject = questionToUpdate.subject
         question.owner = questionToUpdate.owner
-        question.content = question.content
+        question.content = questionToUpdate.content
+
+        question.comments.clear()
+        question.comments.addAll(questionToUpdate.comments)
+
         return save(question)
+    }
+
+    fun findBySubjectId(id: Long, page: Int, pageSize: Int): List<Question> {
+        return find("Subject.id", id).page(Page.of(page, pageSize)).list()
     }
 
 }

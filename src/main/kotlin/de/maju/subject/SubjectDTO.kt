@@ -3,13 +3,16 @@ package de.maju.subject
 import com.maju.openapi.annotations.OASSchema
 import de.maju.question.QuestionDTO
 import org.eclipse.microprofile.openapi.annotations.media.Schema
+import java.time.LocalDate
 
 @OASSchema("Subject")
 @Schema(name = "Subject")
 data class SubjectDTO(
-    val content: String,
-    val id: Long? = null,
-    var headline: String = "",
-    val questions: MutableList<QuestionDTO> = mutableListOf(),
-    val deleted: Boolean = false
-)
+    override val content: String,
+    override val id: Long? = null,
+    override var headline: String = "",
+    override val questions: MutableList<QuestionDTO> = mutableListOf(),
+    override val deleted: Boolean = false,
+    override var isPublic: Boolean = false,
+    override var created: Long = 0
+) : ISubjectDTO

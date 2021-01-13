@@ -1,5 +1,8 @@
 package de.maju.util
 
+import de.maju.comments.CommentMapper
+import de.maju.comments.CommentRepository
+import de.maju.comments.CommentRepositoryProxy
 import de.maju.question.QuestionMapper
 import de.maju.question.QuestionRepository
 import de.maju.question.QuestionRepositoryProxy
@@ -21,4 +24,7 @@ class Config {
     fun questionRepositoryProxy(converter: QuestionMapper, questionRepository: QuestionRepository) =
         QuestionRepositoryProxy(converter, questionRepository)
 
+    @Produces
+    fun commentRepositoryProxy(converter: CommentMapper, commentRepository: CommentRepository) =
+        CommentRepositoryProxy(converter, commentRepository)
 }

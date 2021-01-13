@@ -13,7 +13,7 @@ class QuestionAfterMapper {
     lateinit var subjectRepository: SubjectRepository
 
     @AfterMapping
-    fun setSubject(dto: QuestionDTO, @MappingTarget question: Question) {
+    fun mapDTO(dto: QuestionDTO, @MappingTarget question: Question) {
         val subjectId = dto.subject ?: return
 
         val subject = subjectRepository.findById(subjectId)
@@ -23,11 +23,13 @@ class QuestionAfterMapper {
     }
 
     @AfterMapping
-    fun setSubjectId(@MappingTarget dto: QuestionDTO, question: Question) {
+    fun mapModel(@MappingTarget dto: QuestionDTO, question: Question) {
+        //Subject
         val subjectId = question.subject?.id
         if (subjectId != null) {
-            dto.id = subjectId
+            dto.subject = subjectId
         }
+
     }
 
 }

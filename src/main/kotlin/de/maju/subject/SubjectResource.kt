@@ -12,7 +12,9 @@ import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
 import javax.validation.Validator
 import javax.ws.rs.BadRequestException
+import javax.ws.rs.DefaultValue
 import javax.ws.rs.PathParam
+import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
 
 @ApplicationScoped
@@ -74,9 +76,19 @@ class SubjectResource(
         return result
     }
 
-    @OASPath(path = "/id/{id}/question", requestMethod = RequestMethod.POST)
+    @OASPath(path = "/id/{id}/questions", requestMethod = RequestMethod.POST)
     override fun addQuestionBySubjectId(@PathParam("id") id: Long, questionDTO: QuestionDTO): SubjectDTO {
         return subjectService.addQuestionBySubjectId(id, questionDTO)
+    }
+
+
+    @OASPath(path = "/id/{id}/questions")
+    override fun getQuestionsBySubjectId(
+        @PathParam("id") id: Long,
+        @QueryParam("page") @DefaultValue("1") page: Int?,
+        @QueryParam("pageSize") @DefaultValue("20") pageSize: Int?
+    ): List<QuestionDTO> {
+        return subjectService.getQuestionsBySubjectId(id, page ?: 1, pageSize ?: 20)
     }
 
 

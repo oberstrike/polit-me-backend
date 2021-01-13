@@ -3,9 +3,8 @@ package de.maju.question
 import com.maju.openapi.annotations.OASPath
 import com.maju.openapi.annotations.OASResource
 import com.maju.openapi.codegen.RequestMethod
-import de.maju.subject.SubjectDTO
-import javax.inject.Inject
-import javax.ws.rs.GET
+import de.maju.comments.CommentDTO
+import javax.ws.rs.PathParam
 
 const val questionPath = "/api/questions"
 
@@ -16,9 +15,9 @@ class QuestionResource(
 ) : IQuestionResource {
 
 
-    @OASPath(requestMethod = RequestMethod.POST)
-    override fun deleteQuestion(questionDTO: QuestionDTO): QuestionDTO {
-        return questionService.delete(questionDTO)
+    @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}")
+    override fun deleteQuestion(@PathParam("id") id: Long) {
+        questionService.deleteById(id)
     }
 
 
@@ -27,5 +26,14 @@ class QuestionResource(
         return questionService.update(questionDTO)
     }
 
+    @OASPath(path = "/id/{id}")
+    override fun getQuestionById(@PathParam("id") id: Long): QuestionDTO {
+        return questionService.findById(id)
+    }
+
+    @OASPath(path = "/id/{id}", requestMethod = RequestMethod.POST)
+    override fun addCommentToQuestionById(@PathParam("id") id: Long, commentDTO: CommentDTO): QuestionDTO {
+        return questionService.addCommentToQuestionById(id, commentDTO)
+    }
 
 }
