@@ -1,10 +1,9 @@
-package de.maju.question
+package de.maju.domain.question
 
 import com.maju.openapi.annotations.OASProperty
 import com.maju.openapi.annotations.OASSchema
 import com.maju.openapi.codegen.generators.annotations.schema.OASBaseSchemaEnum
-import de.maju.comments.CommentDTO
-import de.maju.subject.SubjectDTO
+import de.maju.domain.comments.CommentDTO
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 
 @OASSchema("Question")

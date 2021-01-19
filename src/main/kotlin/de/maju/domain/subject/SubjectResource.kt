@@ -1,14 +1,15 @@
-package de.maju.subject
+package de.maju.domain.subject
 
 import com.maju.openapi.annotations.OASPath
 import com.maju.openapi.annotations.OASResource
 import com.maju.openapi.codegen.RequestMethod
-import de.maju.question.QuestionDTO
+import de.maju.domain.question.QuestionDTO
 import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Validator
 import javax.ws.rs.BadRequestException
@@ -20,7 +21,9 @@ import javax.ws.rs.core.MediaType
 @ApplicationScoped
 @OASResource(path = "/api/subjects", tagName = "Subject")
 class SubjectResource(
+    @Inject
     private val subjectService: SubjectService,
+    @Inject
     private val validator: Validator
 ) : ISubjectResource {
 
@@ -71,9 +74,7 @@ class SubjectResource(
     @OASPath(requestMethod = RequestMethod.PUT)
     override fun updateSubject(subjectDTO: SubjectDTO): SubjectDTO {
         validateSubjectDTO(subjectDTO)
-        val result = subjectService.put(subjectDTO)
-        result ?: throw BadRequestException("There was an error while updating the subject: $subjectDTO")
-        return result
+        return subjectService.update(subjectDTO)
     }
 
     @OASPath(path = "/id/{id}/questions", requestMethod = RequestMethod.POST)

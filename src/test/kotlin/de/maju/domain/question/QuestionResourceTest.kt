@@ -1,7 +1,6 @@
 package de.maju.domain.question
 
-import de.maju.comments.CommentDTO
-import de.maju.question.QuestionDTO
+import de.maju.domain.comments.CommentDTO
 import de.maju.util.AbstractRestTest
 import de.maju.util.DockerTestResource
 import io.quarkus.test.common.QuarkusTestResource
@@ -18,8 +17,8 @@ class QuestionResourceTest : AbstractRestTest() {
 
     @AfterEach
     fun clear() {
-        questionRepositoryProxy.deleteAll()
-        subjectRepositoryProxy.deleteAll()
+        questionService.deleteAll()
+        subjectService.deleteAll()
     }
 
     @Test
@@ -42,10 +41,10 @@ class QuestionResourceTest : AbstractRestTest() {
 
     @Test
     fun updateQuestionTest() {
-        withQuestion {
+        withQuestion { question, _ ->
             val owner = "oberstrike"
             val content = ByteArray(2)
-            val toUpdate = it.copy(owner = owner, content = content)
+            val toUpdate = question.copy(owner = owner, content = content)
 
             val updated = questionController.updateQuestion(toUpdate)
             Assertions.assertNotNull(updated)
@@ -56,35 +55,75 @@ class QuestionResourceTest : AbstractRestTest() {
     }
 
     @Test
+    fun updateQuestionWithCommentTest() {
+        withComment { question, comment ->
+            val owner = "New owner"
+            val content = ByteArray(2)
+
+            val toUpdate = question.copy(owner = owner, content = content)
+            val updated = questionController.updateQuestion(toUpdate)
+            Assertions.assertNotNull(updated)
+            Assertions.assertNotNull(updated!!.owner)
+            Assertions.assertEquals(content.toList(), updated.content.toList())
+            Assertions.assertEquals(owner, updated.owner)
+
+            val comments = updated.comments
+            Assertions.assertEquals(1, comments.size)
+
+            val updatedComment = comments.first()
+            Assertions.assertNotNull(updatedComment)
+            Assertions.assertEquals(comment.id!!, updatedComment.id!!)
+
+        }
+
+    }
+
+    @Test
     fun findByIdTest() {
-        withQuestion {
-            val questionDTO = questionController.getQuestionById(it.id!!)
+        withQuestion { question, _ ->
+            val questionDTO = questionController.getQuestionById(question.id!!)
             Assertions.assertNotNull(questionDTO)
             Assertions.assertNotNull(questionDTO!!.id)
-            Assertions.assertEquals(it.id, questionDTO.id)
+            Assertions.assertEquals(question.id, questionDTO.id)
+        }
+    }
+
+    @Test
+    fun addComemntToQuestionTest_negative() {
+        withQuestion { question, _ ->
+            val content = "Ein Kommentar"
+            val comment = CommentDTO(content = content)
+
+            val updatedQuestion = questionController.addCommentToQuestion(question, comment, "")
+            Assertions.assertNull(updatedQuestion)
+
         }
     }
 
     @Test
     fun addCommentToQuestionTest() {
-        withQuestion {
-            val content = "Ein Kommentar"
-            val comment = CommentDTO(content = content)
-            val updatedQuestion = questionController.addCommentToQuestion(it, comment)
-            Assertions.assertNotNull(updatedQuestion)
-
-            val comments = updatedQuestion!!.comments
-            Assertions.assertEquals(1, comments.size)
-            val updatedComment = updatedQuestion.comments.first()
-            Assertions.assertEquals(content, updatedComment.content)
+        withRegistered { _, jwtToken ->
+            withQuestion { question, _ ->
+                val content = "Ein Kommentar"
+                val comment = CommentDTO(content = content)
+                val accessToken = jwtToken.accessToken
 
 
-            //Check if persisted
-            val questionById = questionController.getQuestionById(updatedQuestion.id!!)
-            Assertions.assertNotNull(questionById)
+                val updatedQuestion = questionController.addCommentToQuestion(question, comment, accessToken)
+                Assertions.assertNotNull(updatedQuestion)
 
-            val persistedComments = questionById!!.comments
-            Assertions.assertEquals(1, persistedComments.size)
+                val comments = updatedQuestion!!.comments
+                Assertions.assertEquals(1, comments.size)
+                val updatedComment = updatedQuestion.comments.first()
+                Assertions.assertEquals(content, updatedComment.content)
+
+                //Check if persisted
+                val questionById = questionController.getQuestionById(updatedQuestion.id!!)
+                Assertions.assertNotNull(questionById)
+
+                val persistedComments = questionById!!.comments
+                Assertions.assertEquals(1, persistedComments.size)
+            }
         }
     }
 }

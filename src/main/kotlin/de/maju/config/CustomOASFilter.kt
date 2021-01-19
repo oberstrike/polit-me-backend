@@ -12,10 +12,6 @@ class CustomOnFilterSchemaHandler : AbstractOASFilter.IOnFilterSchemaHandler {
 
     override fun onFilterSchema(schema: Schema) {
         val isArray = schema.type == Schema.SchemaType.ARRAY
-        if(isArray){
-            println(schema)
-        }
-
         when (schema.type) {
             Schema.SchemaType.OBJECT -> schema.additionalPropertiesBoolean = false
             Schema.SchemaType.ARRAY -> if (schema.maxItems == null) {

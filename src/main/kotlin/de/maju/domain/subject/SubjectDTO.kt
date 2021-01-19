@@ -1,9 +1,8 @@
-package de.maju.subject
+package de.maju.domain.subject
 
 import com.maju.openapi.annotations.OASSchema
-import de.maju.question.QuestionDTO
+import de.maju.domain.question.QuestionDTO
 import org.eclipse.microprofile.openapi.annotations.media.Schema
-import java.time.LocalDate
 
 @OASSchema("Subject")
 @Schema(name = "Subject")

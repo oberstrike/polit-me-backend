@@ -38,7 +38,6 @@ dependencies {
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
-    implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-flyway")
 
     implementation("io.quarkus:quarkus-undertow")
@@ -57,6 +56,7 @@ dependencies {
     testImplementation("com.github.dasniko:testcontainers-keycloak:1.3.3")
     testImplementation("org.testcontainers:postgresql:1.15.1")
     testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("io.quarkus:quarkus-keycloak-admin-client")
 
     val junitJupiterVersion = "5.4.2"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")

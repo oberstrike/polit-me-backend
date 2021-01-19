@@ -1,10 +1,9 @@
-package de.maju.question
+package de.maju.domain.question
 
 import com.maju.annotations.RepositoryProxy
-import de.maju.comments.Comment
-import de.maju.subject.Subject
+import de.maju.domain.comments.Comment
+import de.maju.domain.subject.Subject
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
-import io.quarkus.hibernate.orm.panache.kotlin.PanacheQuery
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import javax.enterprise.context.ApplicationScoped
@@ -28,8 +27,11 @@ class Question(
 
     var isPublic: Boolean = false
 
+
     @Lob
+    @Column(name = "content", length = 1000000)
     var content: ByteArray = ByteArray(0)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Question) return false
@@ -47,6 +49,8 @@ class Question(
         result = 31 * result + content.contentHashCode()
         return result
     }
+
+
 
 
 }
@@ -67,15 +71,24 @@ class QuestionRepository : PanacheRepository<Question> {
         question.subject = questionToUpdate.subject
         question.owner = questionToUpdate.owner
         question.content = questionToUpdate.content
-
         question.comments.clear()
         question.comments.addAll(questionToUpdate.comments)
-
         return save(question)
     }
 
     fun findBySubjectId(id: Long, page: Int, pageSize: Int): List<Question> {
         return find("Subject.id", id).page(Page.of(page, pageSize)).list()
+    }
+
+    fun purge(question: Question) {
+        question.comments.clear()
+        delete(question)
+    }
+
+    fun purgeAll() {
+        findAll().stream().forEach {
+            purge(it)
+        }
     }
 
 }

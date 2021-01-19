@@ -1,4 +1,4 @@
-package de.maju.comments
+package de.maju.domain.comments
 
 import com.maju.utils.IConverter
 import org.mapstruct.InjectionStrategy

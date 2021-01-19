@@ -1,8 +1,7 @@
-package de.maju.question
+package de.maju.domain.question
 
 import com.maju.utils.IConverter
-import de.maju.comments.CommentMapper
-import de.maju.util.IMapper
+import de.maju.domain.comments.CommentMapper
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping

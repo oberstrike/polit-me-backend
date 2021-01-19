@@ -1,7 +1,7 @@
-package de.maju.subject
+package de.maju.domain.subject
 
 import com.maju.utils.IConverter
-import de.maju.question.QuestionMapper
+import de.maju.domain.question.QuestionMapper
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping

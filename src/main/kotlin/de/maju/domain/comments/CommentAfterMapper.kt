@@ -1,8 +1,7 @@
-package de.maju.comments
+package de.maju.domain.comments
 
-import de.maju.question.QuestionRepository
+import de.maju.domain.question.QuestionRepository
 import de.maju.util.toEpochMilli
-import de.maju.util.toLocalDateTime
 import de.maju.util.toZonedDateTime
 import org.mapstruct.AfterMapping
 import org.mapstruct.MappingTarget

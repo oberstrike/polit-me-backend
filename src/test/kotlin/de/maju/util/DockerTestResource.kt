@@ -20,14 +20,14 @@ class DockerTestResource : QuarkusTestResourceLifecycleManager {
             val config = creator.getConfig()
             val container = creator.getContainer()
 
-            println("Starting ${container.getDockerImageName()}")
-            if (!container.isRunning()) container.start()
+            println("Starting ${container.dockerImageName}")
+            if (!container.isRunning) container.start()
 
             with(listOfContainer) {
                 if (!contains(container)) add(container)
             }
 
-            println("Started ${container.getDockerImageName()}")
+            println("Started ${container.dockerImageName}")
             resultConfig.putAll(config)
         }
 

@@ -1,12 +1,10 @@
-package de.maju.subject
+package de.maju.domain.subject
 
 import com.maju.annotations.RepositoryProxy
-import de.maju.question.Question
+import de.maju.domain.question.Question
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -65,4 +63,34 @@ class SubjectRepository : PanacheRepository<Subject> {
         return findAll().list()
     }
 
+    fun purge(subject: Subject) {
+        subject.questions.clear()
+        delete(subject)
+    }
+
+    fun update(subject: Subject): Subject? {
+        if (subject.id == null) return null
+        val oldSubject = findById(subject.id!!) ?: return null
+
+        oldSubject.content = subject.content
+        oldSubject.created = subject.created
+        oldSubject.headline = subject.headline
+        oldSubject.isDeleted = subject.isDeleted
+        oldSubject.isPublic = subject.isPublic
+
+        oldSubject.questions.clear()
+        for (question in subject.questions) {
+            oldSubject.questions.add(question)
+        }
+
+        persist(oldSubject)
+        flush()
+        return oldSubject
+    }
+
+    fun purgeAll() {
+        findAll().stream().forEach {
+            purge(it)
+        }
+    }
 }

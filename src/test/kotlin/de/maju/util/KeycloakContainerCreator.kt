@@ -23,7 +23,9 @@ class KeycloakContainerCreator : IContainerCreator<KeycloakContainer> {
         return mutableMapOf(
             "quarkus.oidc.auth-server-url" to "http://$AUTH_SERVER_HOST:$PORT/auth/realms/$REALM_NAME",
             "service.admin.serverUrl" to "http://$AUTH_SERVER_HOST:$PORT/auth",
-            "service.admin.loginUrl" to "http://$AUTH_SERVER_HOST:$PORT/auth/realms/$REALM_NAME}/account"
+            "service.admin.loginUrl" to "http://$AUTH_SERVER_HOST:$PORT/auth/realms/$REALM_NAME}/account",
+            "${UserAuthClient::class.java.`package`.name}.${UserAuthClient::class.java.simpleName}/mp-rest/url"
+                    to "http://$AUTH_SERVER_HOST:$PORT/auth/realms/$REALM_NAME/protocol/openid-connect",
         )
     }
 

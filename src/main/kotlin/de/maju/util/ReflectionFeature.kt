@@ -1,14 +1,12 @@
 package de.maju.util
 
-import de.maju.comments.CommentMapper
-import de.maju.comments.CommentRepository
-import de.maju.comments.CommentRepositoryProxy
-import de.maju.question.QuestionMapper
-import de.maju.question.QuestionRepository
-import de.maju.question.QuestionRepositoryProxy
-import de.maju.subject.SubjectMapper
-import de.maju.subject.SubjectRepository
-import de.maju.subject.SubjectRepositoryProxy
+import de.maju.domain.comments.CommentMapper
+import de.maju.domain.comments.CommentRepository
+import de.maju.domain.comments.CommentRepositoryProxy
+import de.maju.domain.question.QuestionMapper
+import de.maju.domain.question.QuestionRepository
+import de.maju.domain.question.QuestionRepositoryProxy
+import de.maju.domain.subject.*
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
 

@@ -1,8 +1,6 @@
-package de.maju.comments
+package de.maju.domain.comments
 
 import com.maju.openapi.annotations.OASSchema
-import de.maju.question.QuestionDTO
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 
 @OASSchema("Comment")

@@ -1,9 +1,7 @@
 package de.maju.domain.subject
 
 import de.maju.domain.question.fromJson
-import de.maju.question.QuestionDTO
-import de.maju.subject.SubjectDTO
-import de.maju.subject.SubjectRepository
+import de.maju.domain.question.QuestionDTO
 import de.maju.util.Controller
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -60,7 +58,10 @@ class SubjectController {
 
         val response = controller.sendPut("/api/subjects", requestJson)
         val statusCode = response.statusCode()
-        if(statusCode != 200) return null
+        if(statusCode != 200) {
+            println("There was an error $statusCode")
+            println("Error: ${response.body.asString()}")
+        }
 
         val responseJson = response.body.asString()
         return controller.fromJson(responseJson)
@@ -69,7 +70,16 @@ class SubjectController {
     fun addQuestionToSubject(subjectDTO: SubjectDTO, questionDTO: QuestionDTO): SubjectDTO?{
         val json = controller.toJson(questionDTO)
 
-        val response = controller.sendPost("/api/subjects/id/${subjectDTO.id}/question", json)
+        val response = controller.sendPost("/api/subjects/id/${subjectDTO.id}/questions", json)
+        val statusCode = response.statusCode()
+        if(statusCode != 200) return null
+
+        val responseJson = response.body.asString()
+        return controller.fromJson(responseJson)
+    }
+
+    fun getQuestionsBySubjectId(subjectDTO: SubjectDTO): List<QuestionDTO>?{
+        val response = controller.sendGet("/api/subjects/id/${subjectDTO.id}/questions")
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
 

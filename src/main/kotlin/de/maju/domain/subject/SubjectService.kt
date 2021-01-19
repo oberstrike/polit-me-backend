@@ -1,8 +1,8 @@
-package de.maju.subject
+package de.maju.domain.subject
 
-import de.maju.question.QuestionDTO
-import de.maju.question.QuestionRepository
-import de.maju.question.QuestionRepositoryProxy
+import de.maju.domain.question.QuestionDTO
+import de.maju.domain.question.QuestionRepository
+import de.maju.domain.question.QuestionRepositoryProxy
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -30,8 +30,8 @@ class SubjectService {
 
     @Transactional
     fun add(subjectDTO: SubjectDTO): SubjectDTO {
-        if(subjectDTO.id != null) throw BadRequestException("An ID was entered by mistake.")
-        if(subjectDTO.created != 0L) throw BadRequestException("A date was entered accidentally.")
+        if (subjectDTO.id != null) throw BadRequestException("An ID was entered by mistake.")
+        if (subjectDTO.created != 0L) throw BadRequestException("A date was entered accidentally.")
         return subjectRepositoryProxy.save(subjectDTO)
     }
 
@@ -45,15 +45,10 @@ class SubjectService {
     }
 
     @Transactional
-    fun put(subjectDTO: SubjectDTO): SubjectDTO? {
-        if (subjectDTO.id == null) return null
-        val subject = subjectRepository.findById(subjectDTO.id) ?: throw NotFoundException("")
-        subject.content = subjectDTO.content
-        subject.headline = subjectDTO.headline
-        subject.isDeleted = subjectDTO.deleted
-        return subjectRepositoryProxy.converter.convertModelToDTO(
-            subjectRepository.save(subject)
-        )
+    fun update(subjectDTO: SubjectDTO): SubjectDTO {
+        if (subjectDTO.id == null) throw BadRequestException("There is no ID given")
+        return subjectRepositoryProxy.update(subjectDTO)
+            ?: throw BadRequestException("There was an error while updating $subjectDTO")
     }
 
     @Transactional
@@ -89,5 +84,10 @@ class SubjectService {
     fun getQuestionsBySubjectId(id: Long, page: Int, pageSize: Int): List<QuestionDTO> {
         return questionRepositoryProxy.findBySubjectId(id, page, pageSize)
 
+    }
+
+    @Transactional
+    fun deleteAll() {
+        subjectRepository.purgeAll()
     }
 }

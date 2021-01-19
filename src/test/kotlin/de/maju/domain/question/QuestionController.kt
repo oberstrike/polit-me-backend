@@ -1,8 +1,6 @@
 package de.maju.domain.question
 
-import de.maju.comments.CommentDTO
-import de.maju.question.QuestionDTO
-import de.maju.question.questionPath
+import de.maju.domain.comments.CommentDTO
 import de.maju.util.Controller
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -42,9 +40,10 @@ class QuestionController {
         return controller.fromJson(response.asString())
     }
 
-    fun addCommentToQuestion(question: QuestionDTO, comment: CommentDTO): QuestionDTO? {
+    fun addCommentToQuestion(question: QuestionDTO, comment: CommentDTO, accessToken: String): QuestionDTO? {
         val requestJson = controller.toJson(comment)
-        val response = controller.sendPost("$questionPath/id/${question.id}", body = requestJson)
+        val response =
+            controller.sendPost("$questionPath/id/${question.id}/comments", body = requestJson, bearerToken = accessToken)
         val statusCode = response.statusCode
         if (statusCode != 200) return null
         return controller.fromJson(response.asString())

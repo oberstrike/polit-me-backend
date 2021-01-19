@@ -1,6 +1,7 @@
-package de.maju.question
+package de.maju.domain.question
 
-import de.maju.subject.SubjectRepository
+import de.maju.domain.comments.CommentRepository
+import de.maju.domain.subject.SubjectRepository
 import org.mapstruct.AfterMapping
 import org.mapstruct.MappingTarget
 import javax.enterprise.context.ApplicationScoped
@@ -12,14 +13,28 @@ class QuestionAfterMapper {
     @Inject
     lateinit var subjectRepository: SubjectRepository
 
+    @Inject
+    lateinit var commentRepository: CommentRepository
+
     @AfterMapping
     fun mapDTO(dto: QuestionDTO, @MappingTarget question: Question) {
         val subjectId = dto.subject ?: return
-
         val subject = subjectRepository.findById(subjectId)
         if (subject != null) {
             question.subject = subject
         }
+
+        question.comments.clear()
+        val commentIds = dto.comments.map { it.id }
+        for (commentId in commentIds) {
+            if (commentId != null) {
+                val comment = commentRepository.findById(commentId)
+                if (comment != null) {
+                    question.comments.add(comment)
+                }
+            }
+        }
+
     }
 
     @AfterMapping

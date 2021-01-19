@@ -1,7 +1,6 @@
 package de.maju.domain.subject
 
-import de.maju.question.QuestionDTO
-import de.maju.subject.SubjectDTO
+import de.maju.domain.question.QuestionDTO
 import de.maju.util.AbstractRestTest
 import de.maju.util.DockerTestResource
 import io.quarkus.test.common.QuarkusTestResource
@@ -20,8 +19,8 @@ class SubjectResourceTest : AbstractRestTest() {
 
     @AfterEach
     fun clear() {
-        questionRepositoryProxy.deleteAll()
-        subjectRepositoryProxy.deleteAll()
+        subjectService.deleteAll()
+        questionService.deleteAll()
     }
 
 
@@ -82,12 +81,12 @@ class SubjectResourceTest : AbstractRestTest() {
         val test = subjectController.findById(id)
         assert(test == null)
 
-        val findById = subjectRepositoryProxy.findById(id)
+        val findById = subjectService.findById(id)
         assert(findById == null)
     }
 
     @Test
-    fun updatSubject() {
+    fun updateSubject() {
         val newContent = "NewContent123"
 
         withSubject {
@@ -95,6 +94,25 @@ class SubjectResourceTest : AbstractRestTest() {
             val updatedSubject = subjectController.updateSubject(copy)
             Assert.assertNotNull(updatedSubject)
             Assert.assertEquals(newContent, updatedSubject?.content)
+        }
+    }
+
+    @Test
+    fun updateSubjectWithQuestion() {
+        val newContent = "NewContent123"
+
+        withQuestion { question, subject ->
+            val toUpdate = subject.copy(content = newContent)
+            val updatedSubject = subjectController.updateSubject(toUpdate)
+            Assert.assertNotNull(updatedSubject)
+            Assert.assertEquals(newContent, updatedSubject?.content)
+
+            val questions = updatedSubject!!.questions
+            Assertions.assertEquals(1, questions.size)
+
+            val newQuestion = questions.first()
+            Assertions.assertEquals(question.id, newQuestion.id)
+
         }
     }
 
