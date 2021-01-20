@@ -10,6 +10,10 @@ import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionService
 import de.maju.domain.subject.SubjectDTO
 import de.maju.domain.subject.SubjectService
+import de.maju.util.keycloak.JWTToken
+import de.maju.util.keycloak.KeyCloakService
+import de.maju.util.keycloak.UserDTO
+import de.maju.util.keycloak.getLogInForm
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions

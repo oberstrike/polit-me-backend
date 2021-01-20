@@ -66,7 +66,7 @@ class SubjectResource(
         produces = MediaType.APPLICATION_JSON,
         consumes = MediaType.TEXT_PLAIN
     )
-    override fun deleteById(@PathParam("id") id: Long): SubjectDTO {
+    override fun deleteSubjectById(@PathParam("id") id: Long): SubjectDTO {
         return subjectService.deleteById(id)
             ?: throw BadRequestException("There was an error while deleting the subject with the id: $id")
     }

@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.util.keycloak
 
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.keycloak.admin.client.KeycloakBuilder

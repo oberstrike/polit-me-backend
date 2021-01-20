@@ -37,6 +37,10 @@ class QuestionService {
     @Transactional
     fun update(questionDTO: QuestionDTO): QuestionDTO {
         if (questionDTO.id == null) throw BadRequestException("The id of the question to be updated is missing.")
+        //TODO check whether the content is smaller than 20 MB or greater.
+
+        val maxFileSize = 1024 * 1024 * 20
+        if (questionDTO.content.size > maxFileSize) throw BadRequestException("The content of the question ${questionDTO.id} is larger than 20 MB")
 
         try {
             return questionRepositoryProxy.update(questionDTO)
@@ -54,6 +58,8 @@ class QuestionService {
         if (commentDTO.id != null) throw BadRequestException("The comment has an ID: $id")
         if (commentDTO.question != null) throw BadRequestException("The comment has a question")
         if (commentDTO.content.isEmpty()) throw BadRequestException("The content of the commennt is empty")
+
+        //TODO check whether the content is smaller than 20 MB or greater.
 
         try {
             val user = userRepository.find("userid", userId).firstResult()
@@ -93,6 +99,11 @@ class QuestionService {
         return question.comments.remove(comment)
 
 
+    }
+
+    @Transactional
+    fun findByQuery(page: Int, pageSize: Int): List<QuestionDTO> {
+        return questionRepositoryProxy.findByQuery(page, pageSize)
     }
 
 

@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.util.keycloak
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import java.math.BigDecimal

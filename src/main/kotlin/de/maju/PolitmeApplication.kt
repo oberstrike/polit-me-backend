@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.info.License
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme
+import org.eclipse.microprofile.openapi.annotations.servers.Server
 import javax.ws.rs.core.Application
 
 
@@ -42,20 +43,14 @@ class Main {
     components = Components(
         securitySchemes = [
             SecurityScheme(
-                securitySchemeName = "bearerAuth",
-                type = SecuritySchemeType.HTTP,
-                scheme = "bearer",
-                bearerFormat = "JWT"
-            )
-        ],
-        schemas = [
-            Schema(
-
+                securitySchemeName = "openIdConnect",
+                type = SecuritySchemeType.OPENIDCONNECT,
+                openIdConnectUrl = "http://localhost:8280/auth/realms/quarkus/.well-known/openid-configuration"
             )
         ]
     ),
     security = [
-        SecurityRequirement(name = "bearerAuth", scopes = [])
+        SecurityRequirement(name = "openIdConnect", scopes = [])
     ]
 )
 open class PolitmeApplication : QuarkusApplication, Application() {

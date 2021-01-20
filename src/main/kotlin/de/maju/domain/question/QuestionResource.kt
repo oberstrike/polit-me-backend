@@ -1,5 +1,6 @@
 package de.maju.domain.question
 
+import com.maju.openapi.annotations.OASParameter
 import com.maju.openapi.annotations.OASPath
 import com.maju.openapi.annotations.OASResource
 import com.maju.openapi.codegen.RequestMethod
@@ -7,7 +8,9 @@ import de.maju.domain.comments.CommentDTO
 import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.SecurityIdentity
+import javax.ws.rs.DefaultValue
 import javax.ws.rs.PathParam
+import javax.ws.rs.QueryParam
 
 const val questionPath = "/api/questions"
 
@@ -22,6 +25,12 @@ class QuestionResource(
     @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}")
     override fun deleteQuestion(@PathParam("id") id: Long) {
         questionService.deleteById(id)
+    }
+
+    @OASPath
+    override fun findByQuery(@QueryParam("page") @DefaultValue("0") page: Int,
+                             @QueryParam("pageSize") pageSize: Int): List<QuestionDTO> {
+        return questionService.findByQuery(page, pageSize)
     }
 
 

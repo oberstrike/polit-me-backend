@@ -70,6 +70,9 @@ class SubjectService {
 
     @Transactional
     fun addQuestionBySubjectId(id: Long, questionDTO: QuestionDTO): SubjectDTO {
+        //TODO check whether the content is smaller than 20 MB or greater.
+        if (questionDTO.content.size > 1024 * 1024 * 20) throw BadRequestException("The filesize is larger than 20 MB")
+
         val subject =
             subjectRepository.findById(id) ?: throw NotFoundException("No subject with the id $id was found.")
 

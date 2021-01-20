@@ -1,10 +1,8 @@
-package de.maju.config
+package de.maju.config.openapi
 
 import io.smallrye.openapi.api.models.ComponentsImpl
 import io.smallrye.openapi.api.models.OpenAPIImpl
 import io.smallrye.openapi.api.models.media.SchemaImpl
-import io.smallrye.openapi.api.models.servers.ServerImpl
-import io.smallrye.openapi.api.models.servers.ServerVariableImpl
 import org.eclipse.microprofile.openapi.OASFilter
 import org.eclipse.microprofile.openapi.OASModelReader
 import org.eclipse.microprofile.openapi.models.OpenAPI
@@ -17,15 +15,21 @@ abstract class AbstractOASFilter : OASFilter, IFilterSchema {
         fun onFilterSchema(schema: Schema)
     }
 
+    interface IOnFilterOpenApiHandler {
+        fun onFilterOpenApi(openAPI: OpenAPI)
+    }
 
     override val onFilterSchemaHandlers: List<IOnFilterSchemaHandler> = emptyList()
+
+    override val onFilterOpenApiHandlers: List<IOnFilterOpenApiHandler> = emptyList()
 
     override fun filterSchema(schema: Schema): Schema {
         onFilterSchemaHandlers.onEach { it.onFilterSchema(schema) }
         return super.filterSchema(schema)
     }
 
-    override fun filterOpenAPI(openAPI: OpenAPI?) {
+    override fun filterOpenAPI(openAPI: OpenAPI) {
+        onFilterOpenApiHandlers.onEach { it.onFilterOpenApi(openAPI) }
         super.filterOpenAPI(openAPI)
     }
 
@@ -37,7 +41,10 @@ abstract class AbstractOASFilter : OASFilter, IFilterSchema {
 
 interface IFilterSchema {
     val onFilterSchemaHandlers: List<AbstractOASFilter.IOnFilterSchemaHandler>
+    val onFilterOpenApiHandlers: List<AbstractOASFilter.IOnFilterOpenApiHandler>
+
 }
+
 
 class ModelReader : OASModelReader {
 

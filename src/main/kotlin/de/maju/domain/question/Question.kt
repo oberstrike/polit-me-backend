@@ -51,13 +51,15 @@ class Question(
     }
 
 
-
-
 }
 
 @ApplicationScoped
 @RepositoryProxy(converter = QuestionMapper::class)
 class QuestionRepository : PanacheRepository<Question> {
+
+    fun findByQuery(page: Int, pageSize: Int): List<Question> {
+        return findAll().page(Page.of(page, pageSize)).list()
+    }
 
     fun save(question: Question): Question {
         persist(question)
