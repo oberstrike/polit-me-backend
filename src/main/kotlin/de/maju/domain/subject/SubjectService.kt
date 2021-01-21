@@ -1,8 +1,10 @@
 package de.maju.domain.subject
 
+import de.maju.domain.data.DataFileRepositoryProxy
 import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionRepository
 import de.maju.domain.question.QuestionRepositoryProxy
+import de.maju.domain.question.QuestionService
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -24,6 +26,12 @@ class SubjectService {
     @Inject
     lateinit var questionRepository: QuestionRepository
 
+    @Inject
+    lateinit var dataFileRepositoryProxy: DataFileRepositoryProxy
+
+    @Inject
+    lateinit var questionService: QuestionService
+
     fun findById(id: Long): SubjectDTO? {
         return subjectRepositoryProxy.findById(id)
     }
@@ -32,6 +40,7 @@ class SubjectService {
     fun add(subjectDTO: SubjectDTO): SubjectDTO {
         if (subjectDTO.id != null) throw BadRequestException("An ID was entered by mistake.")
         if (subjectDTO.created != 0L) throw BadRequestException("A date was entered accidentally.")
+
         return subjectRepositoryProxy.save(subjectDTO)
     }
 
@@ -70,18 +79,17 @@ class SubjectService {
 
     @Transactional
     fun addQuestionBySubjectId(id: Long, questionDTO: QuestionDTO): SubjectDTO {
-        //TODO check whether the content is smaller than 20 MB or greater.
-        if (questionDTO.content.size > 1024 * 1024 * 20) throw BadRequestException("The filesize is larger than 20 MB")
 
         val subject =
             subjectRepository.findById(id) ?: throw NotFoundException("No subject with the id $id was found.")
 
         if (questionDTO.id != null) throw BadRequestException("The requested question has already an ID.")
-        val question = questionRepositoryProxy.converter.convertDTOToModel(questionDTO)
 
-        subject.addQuestion(question)
-        questionRepository.save(question)
-        return subjectRepositoryProxy.converter.convertModelToDTO(subject)
+        val oldQuestion = questionRepositoryProxy.converter.convertDTOToModel(questionDTO)
+        oldQuestion.subject = subject
+        val persistedQuestion = questionRepository.save(oldQuestion)
+
+        return subjectRepositoryProxy.findById(id)?: throw BadRequestException("")
     }
 
     fun getQuestionsBySubjectId(id: Long, page: Int, pageSize: Int): List<QuestionDTO> {

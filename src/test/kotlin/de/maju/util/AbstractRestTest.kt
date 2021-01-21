@@ -4,6 +4,7 @@ package de.maju.util
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepositoryProxy
 import de.maju.domain.comment.CommentController
+import de.maju.domain.data.DataFileDTO
 import de.maju.domain.question.QuestionController
 import de.maju.domain.subject.SubjectController
 import de.maju.domain.question.QuestionDTO
@@ -114,7 +115,10 @@ abstract class AbstractRestTest {
         }
     }
 
-    fun withComment(commentDTO: CommentDTO = TestHelper.createCommentDTO(), block: (question: QuestionDTO, comment: CommentDTO) -> Unit) {
+    fun withComment(
+        commentDTO: CommentDTO = TestHelper.createCommentDTO(),
+        block: (question: QuestionDTO, comment: CommentDTO) -> Unit
+    ) {
         withQuestion { question, _ ->
             withRegistered { _, jwtToken ->
                 val updatedQuestion =
@@ -133,10 +137,12 @@ abstract class AbstractRestTest {
 
 object TestHelper {
 
-    fun createSubjectDTO() = SubjectDTO(content = "Content ${Random.nextInt()}")
+    fun createSubjectDTO() = SubjectDTO(content = "Content ${Random.nextInt(100)}")
 
-    fun createQuestionDTO() = QuestionDTO(owner = "Markus", content = ByteArray(Random.nextInt(100)))
+    fun createQuestionDTO() = QuestionDTO(owner = "Markus", content = createDataFileDTO(100))
 
-    fun createCommentDTO() = CommentDTO(content = "Comment ${Random.nextInt()}")
+    fun createCommentDTO() = CommentDTO(content = "Comment ${Random.nextInt(100)}")
+
+    fun createDataFileDTO(size: Int = Random.nextInt(100)) = DataFileDTO(content = ByteArray(size), name = "test.png", extension = "png")
 
 }

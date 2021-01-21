@@ -17,13 +17,13 @@ class CommentResource(
 ) : ICommentResource {
 
     @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}")
-    override fun deleteById(@PathParam("id") id: Long) {
+    override fun deleteCommentById(@PathParam("id") id: Long) {
         val isDeleted = commentService.deleteById(id)
         if (!isDeleted) throw BadRequestException("There was an error while deleting $id")
     }
 
     @OASPath(path = "/id/{id}")
-    override fun findById(@PathParam("id") id: Long): CommentDTO {
+    override fun findCommentById(@PathParam("id") id: Long): CommentDTO {
         return commentService.findById(id)
     }
 
@@ -33,7 +33,7 @@ class CommentResource(
     }
 
     @OASPath
-    override fun find(@QueryParam("page") page: Int, @QueryParam("pageSize") pageSize: Int): List<CommentDTO> {
+    override fun findCommentByQuery(@QueryParam("page") page: Int, @QueryParam("pageSize") pageSize: Int): List<CommentDTO> {
         return commentService.findAll(page, pageSize)
     }
 

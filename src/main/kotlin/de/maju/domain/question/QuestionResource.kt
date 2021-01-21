@@ -28,8 +28,8 @@ class QuestionResource(
     }
 
     @OASPath
-    override fun findByQuery(@QueryParam("page") @DefaultValue("0") page: Int,
-                             @QueryParam("pageSize") pageSize: Int): List<QuestionDTO> {
+    override fun findQuestionByQuery(@QueryParam("page") @DefaultValue("0") page: Int,
+                                     @QueryParam("pageSize") pageSize: Int): List<QuestionDTO> {
         return questionService.findByQuery(page, pageSize)
     }
 

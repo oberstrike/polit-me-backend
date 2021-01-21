@@ -6,10 +6,10 @@ import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import javax.enterprise.context.ApplicationScoped
 import javax.persistence.*
 
-@Entity(name = "party")
-data class User(
+@Entity
+data class KeycloakUser(
     @OneToMany(
-        mappedBy = "user",
+        mappedBy = "keycloakUser",
         cascade = [CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE],
         orphanRemoval = true
     )
@@ -17,10 +17,10 @@ data class User(
     var userId: String = ""
 ) : PanacheEntity()
 
-data class UserDTO(
+data class KeycloakUserDTO(
     val id: Long,
     val userId: String
 )
 
 @ApplicationScoped
-class UserRepository : PanacheRepository<User>
+class KeycloakUserRepository : PanacheRepository<KeycloakUser>

@@ -3,9 +3,9 @@ package de.maju.domain.subject
 import de.maju.domain.question.QuestionDTO
 import de.maju.util.AbstractRestTest
 import de.maju.util.DockerTestResource
+import de.maju.util.TestHelper
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
-import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ class SubjectResourceTest : AbstractRestTest() {
 
         val content = "Content123"
         val added = subjectController.addSubjectDTO(SubjectDTO(content = content))
-        Assert.assertNotNull(added)
+        Assertions.assertNotNull(added)
         assert(added!!.content == content)
 
         val getAllWithAddedSubject = subjectController.getAll()
@@ -68,7 +68,7 @@ class SubjectResourceTest : AbstractRestTest() {
             subjectController.deleteById(it)
         }
 
-        Assert.assertNotNull(deleted)
+        Assertions.assertNotNull(deleted)
         assert(id == deleted!!.id)
         assert(deleted.deleted)
 
@@ -92,8 +92,8 @@ class SubjectResourceTest : AbstractRestTest() {
         withSubject {
             val copy = it.copy(content = newContent)
             val updatedSubject = subjectController.updateSubject(copy)
-            Assert.assertNotNull(updatedSubject)
-            Assert.assertEquals(newContent, updatedSubject?.content)
+            Assertions.assertNotNull(updatedSubject)
+            Assertions.assertEquals(newContent, updatedSubject?.content)
         }
     }
 
@@ -104,8 +104,8 @@ class SubjectResourceTest : AbstractRestTest() {
         withQuestion { question, subject ->
             val toUpdate = subject.copy(content = newContent)
             val updatedSubject = subjectController.updateSubject(toUpdate)
-            Assert.assertNotNull(updatedSubject)
-            Assert.assertEquals(newContent, updatedSubject?.content)
+            Assertions.assertNotNull(updatedSubject)
+            Assertions.assertEquals(newContent, updatedSubject?.content)
 
             val questions = updatedSubject!!.questions
             Assertions.assertEquals(1, questions.size)
@@ -119,11 +119,32 @@ class SubjectResourceTest : AbstractRestTest() {
     @Test
     fun addQuestionToSubject() {
         withSubject {
-            val question = QuestionDTO(content = ByteArray(1), owner = "Markus")
+            val question = QuestionDTO(owner = "Markus")
 
             val result = subjectController.addQuestionToSubject(it, question)
             Assertions.assertNotNull(result)
-            Assert.assertEquals(1, result!!.questions.size)
+            Assertions.assertEquals(1, result!!.questions.size)
+        }
+    }
+
+    @Test
+    fun addQuestionToSubjectWithDatafile() {
+        withSubject {
+            val question = QuestionDTO(owner = "Markus", content = TestHelper.createDataFileDTO(1))
+
+            val resultQuestion = subjectController.addQuestionToSubject(it, question)
+
+            Assertions.assertNotNull(resultQuestion)
+            val content = resultQuestion!!.content
+            val questions = resultQuestion.questions
+
+            Assertions.assertEquals(it.content, content)
+            Assertions.assertEquals(1, questions.size)
+
+            val updatedQuestion = questions.first()
+            Assertions.assertNotNull(updatedQuestion)
+            Assertions.assertNotNull(updatedQuestion.content)
+
         }
     }
 

@@ -60,3 +60,16 @@ create table comment
 alter table comment
     owner to postgres;
 
+create table datafile
+(
+    id        bigint not null
+        constraint datafile_pkey
+            primary key,
+    content   oid,
+    extension varchar(255),
+    name      varchar(255)
+);
+
+alter table datafile
+    owner to postgres;
+

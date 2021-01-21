@@ -1,6 +1,8 @@
 package de.maju.domain.question
 
 import de.maju.domain.comments.CommentRepository
+import de.maju.domain.data.DataFileMapper
+import de.maju.domain.data.DataFileRepository
 import de.maju.domain.subject.SubjectRepository
 import org.mapstruct.AfterMapping
 import org.mapstruct.MappingTarget
@@ -15,6 +17,12 @@ class QuestionAfterMapper {
 
     @Inject
     lateinit var commentRepository: CommentRepository
+
+    @Inject
+    lateinit var dataFileRepository: DataFileRepository
+
+    @Inject
+    lateinit var dataFileMapper: DataFileMapper
 
     @AfterMapping
     fun mapDTO(dto: QuestionDTO, @MappingTarget question: Question) {
@@ -32,6 +40,20 @@ class QuestionAfterMapper {
                 if (comment != null) {
                     question.comments.add(comment)
                 }
+            }
+        }
+
+        val dataFileDTO = dto.content
+        if (dataFileDTO != null) {
+            val id = dataFileDTO.id
+            if (id != null) {
+                val dataFile = dataFileRepository.findById(id)
+                if (dataFile != null) {
+                    question.dataFile = dataFile
+                }
+            } else {
+                val dataFile = dataFileRepository.save(dataFileMapper.convertDTOToModel(dataFileDTO))
+                question.dataFile = dataFile
             }
         }
 

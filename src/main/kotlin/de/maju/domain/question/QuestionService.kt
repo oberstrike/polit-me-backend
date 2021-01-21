@@ -1,9 +1,12 @@
 package de.maju.domain.question
 
-import de.maju.admin.UserRepository
+import de.maju.admin.KeycloakUserRepository
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepository
 import de.maju.domain.comments.CommentRepositoryProxy
+import de.maju.domain.data.DataFileDTO
+import de.maju.domain.data.DataFileRepository
+import de.maju.domain.data.DataFileRepositoryProxy
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -14,7 +17,7 @@ import javax.ws.rs.NotFoundException
 class QuestionService {
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: KeycloakUserRepository
 
     @Inject
     lateinit var questionRepositoryProxy: QuestionRepositoryProxy
@@ -28,6 +31,22 @@ class QuestionService {
     @Inject
     lateinit var commentRepository: CommentRepository
 
+    @Inject
+    lateinit var dataFileRepositoryProxy: DataFileRepositoryProxy
+
+    @Inject
+    lateinit var dataFileRepository: DataFileRepository
+
+
+    @Transactional
+    fun addDataFileToQuestionById(questionId: Long, dataFile: DataFileDTO) {
+        val question = questionRepository.findById(questionId)
+            ?: throw NotFoundException("No question with the ID $questionId was found")
+        val savedDataFile = dataFileRepositoryProxy.save(dataFile)
+        val persistedDataFile = dataFileRepository.findById(savedDataFile.id!!)
+        question.dataFile = persistedDataFile
+    }
+
     @Transactional
     fun deleteById(id: Long) {
         questionRepositoryProxy.findById(id) ?: throw NotFoundException("No question with the ID $id was found.")
@@ -38,9 +57,6 @@ class QuestionService {
     fun update(questionDTO: QuestionDTO): QuestionDTO {
         if (questionDTO.id == null) throw BadRequestException("The id of the question to be updated is missing.")
         //TODO check whether the content is smaller than 20 MB or greater.
-
-        val maxFileSize = 1024 * 1024 * 20
-        if (questionDTO.content.size > maxFileSize) throw BadRequestException("The content of the question ${questionDTO.id} is larger than 20 MB")
 
         try {
             return questionRepositoryProxy.update(questionDTO)
@@ -59,14 +75,10 @@ class QuestionService {
         if (commentDTO.question != null) throw BadRequestException("The comment has a question")
         if (commentDTO.content.isEmpty()) throw BadRequestException("The content of the commennt is empty")
 
-        //TODO check whether the content is smaller than 20 MB or greater.
-
         try {
             val user = userRepository.find("userid", userId).firstResult()
-
-
             val comment = commentRepositoryProxy.converter.convertDTOToModel(commentDTO)
-            comment.user = user
+            comment.keycloakUser = user
             question.comments.add(comment)
             comment.question = question
 

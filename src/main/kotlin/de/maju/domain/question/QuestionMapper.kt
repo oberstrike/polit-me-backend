@@ -2,12 +2,13 @@ package de.maju.domain.question
 
 import com.maju.utils.IConverter
 import de.maju.domain.comments.CommentMapper
+import de.maju.domain.data.DataFileMapper
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 
-@Mapper(uses = [QuestionAfterMapper::class, CommentMapper::class], componentModel = "cdi", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(uses = [QuestionAfterMapper::class, CommentMapper::class, DataFileMapper::class], componentModel = "cdi", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 abstract class QuestionMapper : IConverter<Question, QuestionDTO> {
 
     @Mappings(

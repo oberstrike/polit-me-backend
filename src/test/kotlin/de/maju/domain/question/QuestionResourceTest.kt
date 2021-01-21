@@ -3,8 +3,10 @@ package de.maju.domain.question
 import de.maju.domain.comments.CommentDTO
 import de.maju.util.AbstractRestTest
 import de.maju.util.DockerTestResource
+import de.maju.util.TestHelper
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -23,7 +25,7 @@ class QuestionResourceTest : AbstractRestTest() {
 
     @Test
     fun addAQuestionAndDeleteIt() {
-        val question = QuestionDTO(owner = "Markus", content = ByteArray(3))
+        val question = QuestionDTO(owner = "Markus", content= TestHelper.createDataFileDTO())
 
         withSubject {
             val updatedSubject = subjectController.addQuestionToSubject(it, question)
@@ -43,13 +45,14 @@ class QuestionResourceTest : AbstractRestTest() {
     fun updateQuestionTest() {
         withQuestion { question, _ ->
             val owner = "oberstrike"
-            val content = ByteArray(2)
-            val toUpdate = question.copy(owner = owner, content = content)
+            val size = 1
+            val toUpdate = question.copy(owner = owner, content= TestHelper.createDataFileDTO(size))
 
             val updated = questionController.updateQuestion(toUpdate)
             Assertions.assertNotNull(updated)
             Assertions.assertNotNull(updated!!.owner)
-            Assertions.assertEquals(content.toList(), updated.content.toList())
+            Assertions.assertNotNull(updated.content)
+            Assertions.assertEquals(size, updated.content!!.content.size)
             Assertions.assertEquals(owner, updated.owner)
         }
     }
@@ -58,13 +61,13 @@ class QuestionResourceTest : AbstractRestTest() {
     fun updateQuestionWithCommentTest() {
         withComment { question, comment ->
             val owner = "New owner"
-            val content = ByteArray(2)
+            val content= TestHelper.createDataFileDTO(2)
 
-            val toUpdate = question.copy(owner = owner, content = content)
+            val toUpdate = question.copy(owner = owner, content=content)
             val updated = questionController.updateQuestion(toUpdate)
             Assertions.assertNotNull(updated)
             Assertions.assertNotNull(updated!!.owner)
-            Assertions.assertEquals(content.toList(), updated.content.toList())
+            Assertions.assertEquals(content.content.size, updated.content!!.content.size)
             Assertions.assertEquals(owner, updated.owner)
 
             val comments = updated.comments
@@ -89,7 +92,7 @@ class QuestionResourceTest : AbstractRestTest() {
     }
 
     @Test
-    fun addComemntToQuestionTest_negative() {
+    fun addCommentToQuestionTest_negative() {
         withQuestion { question, _ ->
             val content = "Ein Kommentar"
             val comment = CommentDTO(content = content)
