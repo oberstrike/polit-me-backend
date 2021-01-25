@@ -43,7 +43,7 @@ class QuestionAfterMapper {
             }
         }
 
-        val dataFileDTO = dto.content
+        val dataFileDTO = dto.dataFile
         if (dataFileDTO != null) {
             val id = dataFileDTO.id
             if (id != null) {

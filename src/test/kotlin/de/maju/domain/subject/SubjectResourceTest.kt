@@ -130,7 +130,7 @@ class SubjectResourceTest : AbstractRestTest() {
     @Test
     fun addQuestionToSubjectWithDatafile() {
         withSubject {
-            val question = QuestionDTO(owner = "Markus", content = TestHelper.createDataFileDTO(1))
+            val question = QuestionDTO(owner = "Markus", dataFile = TestHelper.createDataFileDTO(1))
 
             val resultQuestion = subjectController.addQuestionToSubject(it, question)
 
@@ -143,7 +143,7 @@ class SubjectResourceTest : AbstractRestTest() {
 
             val updatedQuestion = questions.first()
             Assertions.assertNotNull(updatedQuestion)
-            Assertions.assertNotNull(updatedQuestion.content)
+            Assertions.assertNotNull(updatedQuestion.dataFile)
 
         }
     }

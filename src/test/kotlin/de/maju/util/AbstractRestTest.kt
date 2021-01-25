@@ -139,7 +139,7 @@ object TestHelper {
 
     fun createSubjectDTO() = SubjectDTO(content = "Content ${Random.nextInt(100)}")
 
-    fun createQuestionDTO() = QuestionDTO(owner = "Markus", content = createDataFileDTO(100))
+    fun createQuestionDTO() = QuestionDTO(owner = "Markus", dataFile = createDataFileDTO(100))
 
     fun createCommentDTO() = CommentDTO(content = "Comment ${Random.nextInt(100)}")
 

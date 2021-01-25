@@ -11,6 +11,7 @@ import io.quarkus.security.identity.SecurityIdentity
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.PathParam
 import javax.ws.rs.QueryParam
+import javax.ws.rs.core.MediaType
 
 const val questionPath = "/api/questions"
 
@@ -22,14 +23,16 @@ class QuestionResource(
 ) : IQuestionResource {
 
 
-    @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}")
-    override fun deleteQuestion(@PathParam("id") id: Long) {
+    @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}", consumes = MediaType.TEXT_PLAIN)
+    override fun deleteQuestionById(@PathParam("id") id: Long) {
         questionService.deleteById(id)
     }
 
     @OASPath
-    override fun findQuestionByQuery(@QueryParam("page") @DefaultValue("0") page: Int,
-                                     @QueryParam("pageSize") pageSize: Int): List<QuestionDTO> {
+    override fun findQuestionByQuery(
+        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("pageSize") pageSize: Int
+    ): List<QuestionDTO> {
         return questionService.findByQuery(page, pageSize)
     }
 

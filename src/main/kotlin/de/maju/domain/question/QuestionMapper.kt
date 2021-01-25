@@ -8,7 +8,8 @@ import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 
-@Mapper(uses = [QuestionAfterMapper::class, CommentMapper::class, DataFileMapper::class], componentModel = "cdi", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(uses = [QuestionAfterMapper::class,
+    CommentMapper::class, DataFileMapper::class], componentModel = "cdi", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 abstract class QuestionMapper : IConverter<Question, QuestionDTO> {
 
     @Mappings(

@@ -14,4 +14,8 @@ data class SubjectDTO(
     override val deleted: Boolean = false,
     override var isPublic: Boolean = false,
     override var created: Long = 0
-) : ISubjectDTO
+) : ISubjectDTO, SubjectCreateDTO
+
+interface SubjectCreateDTO {
+    val content: String
+}
