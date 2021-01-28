@@ -1,8 +1,8 @@
-package de.maju.domain.comment
+package de.maju.rest.domain.comment
 
-import de.maju.util.AbstractRestTest
-import de.maju.util.DockerTestResource
-import de.maju.util.TestHelper
+import de.maju.rest.util.AbstractRestTest
+import de.maju.rest.util.DockerTestResource
+import de.maju.rest.util.TestHelper
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions

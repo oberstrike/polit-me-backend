@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.rest.util
 
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient

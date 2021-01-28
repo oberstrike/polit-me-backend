@@ -24,10 +24,6 @@ data class Subject(
 ) : PanacheEntity() {
 
 
-    fun addQuestion(question: Question) {
-        question.subject = this
-        questions.add(question)
-    }
 }
 
 

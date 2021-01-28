@@ -11,10 +11,11 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema
 @Schema(name = "Question")
 data class QuestionDTO(
     override val owner: String,
-    override var dataFile: DataFileDTO? = null,
+    override var dataFile: Long? = null,
     override var subject: Long? = null,
     override var id: Long? = null,
     override var isPublic: Boolean = false,
-    override var comments: MutableList<CommentDTO> = mutableListOf()
+    override var comments: MutableList<CommentDTO> = mutableListOf(),
+    override var created: Long = 0
 ) : IQuestionDTO
 

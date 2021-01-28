@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.rest.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.restassured.http.ContentType

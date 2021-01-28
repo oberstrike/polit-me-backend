@@ -1,9 +1,9 @@
-package de.maju.domain.comment
+package de.maju.rest.domain.comment
 
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.commentPath
-import de.maju.domain.question.fromJson
-import de.maju.util.Controller
+import de.maju.rest.domain.question.fromJson
+import de.maju.rest.util.Controller
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 

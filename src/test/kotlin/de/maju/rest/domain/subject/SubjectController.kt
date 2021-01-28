@@ -1,8 +1,10 @@
-package de.maju.domain.subject
+package de.maju.rest.domain.subject
 
-import de.maju.domain.question.fromJson
+import de.maju.rest.domain.question.fromJson
 import de.maju.domain.question.QuestionDTO
-import de.maju.util.Controller
+import de.maju.domain.subject.SubjectDTO
+import de.maju.domain.subject.SubjectRepository
+import de.maju.rest.util.Controller
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional

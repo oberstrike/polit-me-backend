@@ -4,6 +4,7 @@ import de.maju.domain.comments.Comment
 import de.maju.domain.data.DataFile
 import de.maju.domain.subject.Subject
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -24,8 +25,11 @@ class Question(
 
     var isPublic: Boolean = false
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,
+        cascade = [CascadeType.REMOVE, CascadeType.REFRESH],
+        orphanRemoval = true)
     var dataFile: DataFile? = null
 
+    var created: LocalDateTime = LocalDateTime.now()
 }
 

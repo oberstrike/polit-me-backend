@@ -1,9 +1,9 @@
-package de.maju.domain.subject
+package de.maju.rest.domain.subject
 
 import de.maju.domain.question.QuestionDTO
-import de.maju.util.AbstractRestTest
-import de.maju.util.DockerTestResource
-import de.maju.util.TestHelper
+import de.maju.domain.subject.SubjectDTO
+import de.maju.rest.util.AbstractRestTest
+import de.maju.rest.util.DockerTestResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.AfterEach
@@ -121,17 +121,6 @@ class SubjectResourceTest : AbstractRestTest() {
         withSubject {
             val question = QuestionDTO(owner = "Markus")
 
-            val result = subjectController.addQuestionToSubject(it, question)
-            Assertions.assertNotNull(result)
-            Assertions.assertEquals(1, result!!.questions.size)
-        }
-    }
-
-    @Test
-    fun addQuestionToSubjectWithDatafile() {
-        withSubject {
-            val question = QuestionDTO(owner = "Markus", dataFile = TestHelper.createDataFileDTO(1))
-
             val resultQuestion = subjectController.addQuestionToSubject(it, question)
 
             Assertions.assertNotNull(resultQuestion)
@@ -143,7 +132,6 @@ class SubjectResourceTest : AbstractRestTest() {
 
             val updatedQuestion = questions.first()
             Assertions.assertNotNull(updatedQuestion)
-            Assertions.assertNotNull(updatedQuestion.dataFile)
 
         }
     }

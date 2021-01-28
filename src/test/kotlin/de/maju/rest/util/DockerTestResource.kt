@@ -1,6 +1,6 @@
-package de.maju.util
+package de.maju.rest.util
 
-import de.maju.util.keycloak.KeycloakContainerCreator
+import de.maju.rest.util.keycloak.KeycloakContainerCreator
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
 

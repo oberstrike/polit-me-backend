@@ -1,7 +1,9 @@
-package de.maju.domain.question
+package de.maju.rest.domain.question
 
 import de.maju.domain.comments.CommentDTO
-import de.maju.util.Controller
+import de.maju.domain.question.QuestionDTO
+import de.maju.domain.question.questionPath
+import de.maju.rest.util.Controller
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 

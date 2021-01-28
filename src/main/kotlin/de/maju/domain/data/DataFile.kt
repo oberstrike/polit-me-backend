@@ -9,11 +9,12 @@ import javax.persistence.Lob
 class DataFile : PanacheEntity() {
 
     @Lob
-    @Column(name = "content", length = 1000000)
+    @Column(name = "content", length = 1024 * 1024 * 20)
     var content: ByteArray = ByteArray(1)
 
     var name: String = ""
 
     var extension: String = ""
+
 }
 

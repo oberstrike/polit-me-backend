@@ -87,9 +87,9 @@ class SubjectService {
 
         val oldQuestion = questionRepositoryProxy.converter.convertDTOToModel(questionDTO)
         oldQuestion.subject = subject
-        val persistedQuestion = questionRepository.save(oldQuestion)
+        questionRepository.save(oldQuestion)
 
-        return subjectRepositoryProxy.findById(id)?: throw BadRequestException("")
+        return subjectRepositoryProxy.findById(id) ?: throw BadRequestException("")
     }
 
     fun getQuestionsBySubjectId(id: Long, page: Int, pageSize: Int): List<QuestionDTO> {
@@ -100,5 +100,11 @@ class SubjectService {
     @Transactional
     fun deleteAll() {
         subjectRepository.purgeAll()
+    }
+
+    @Transactional
+    fun getSubjectsByQuery(page: Int = 0, pageSize: Int = 10): List<SubjectDTO> {
+        return subjectRepositoryProxy.findByQuery(page, pageSize)
+
     }
 }

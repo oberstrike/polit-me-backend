@@ -11,7 +11,7 @@ import javax.ws.rs.QueryParam
 const val commentPath = "/api/comments"
 
 @ApplicationScoped
-@OASResource(path = commentPath, tagName = "Comments", isProtected = true)
+@OASResource(path = commentPath, tagName = "Comments", isSecured = true)
 class CommentResource(
     private val commentService: CommentService
 ) : ICommentResource {

@@ -17,9 +17,6 @@ class SubjectAfterMapper {
 
     @AfterMapping
     fun mapDTO(dto: SubjectDTO, @MappingTarget subject: Subject) {
-        val created = dto.created
-        subject.created = if (created == 0L) LocalDateTime.now() else created.toZonedDateTime()
-
         subject.questions.clear()
         val questionIds = dto.questions.map { it.id }
         for (questionId in questionIds) {
@@ -29,10 +26,5 @@ class SubjectAfterMapper {
             }
         }
     }
-
-    @AfterMapping
-    fun mapModel(@MappingTarget dto: SubjectDTO, subject: Subject) {
-        val created = subject.created
-        dto.created = created.toEpochMilli()
-    }
+    
 }

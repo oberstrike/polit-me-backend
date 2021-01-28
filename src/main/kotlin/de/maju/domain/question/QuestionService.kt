@@ -1,17 +1,20 @@
 package de.maju.domain.question
 
-import de.maju.admin.KeycloakUserRepository
+import de.maju.domain.admin.KeycloakUserRepository
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepository
 import de.maju.domain.comments.CommentRepositoryProxy
 import de.maju.domain.data.DataFileDTO
 import de.maju.domain.data.DataFileRepository
 import de.maju.domain.data.DataFileRepositoryProxy
+import de.maju.util.Validator
+import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.BadRequestException
 import javax.ws.rs.NotFoundException
+import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class QuestionService {
@@ -37,11 +40,17 @@ class QuestionService {
     @Inject
     lateinit var dataFileRepository: DataFileRepository
 
+    @Inject
+    lateinit var dataFileValidator: Validator<DataFileDTO>
 
     @Transactional
     fun addDataFileToQuestionById(questionId: Long, dataFile: DataFileDTO) {
+        if (!dataFileValidator.validate(dataFile))
+            throw BadRequestException("There was an error while adding the file ${dataFile.name}")
+
         val question = questionRepository.findById(questionId)
             ?: throw NotFoundException("No question with the ID $questionId was found")
+
         val savedDataFile = dataFileRepositoryProxy.save(dataFile)
         val persistedDataFile = dataFileRepository.findById(savedDataFile.id!!)
         question.dataFile = persistedDataFile

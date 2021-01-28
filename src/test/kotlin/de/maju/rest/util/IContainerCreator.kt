@@ -1,4 +1,4 @@
-package de.maju.util
+package de.maju.rest.util
 
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.PostgreSQLContainer

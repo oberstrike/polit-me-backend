@@ -1,4 +1,4 @@
-package de.maju.admin
+package de.maju.domain.admin
 
 import de.maju.domain.comments.Comment
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity

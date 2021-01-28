@@ -2,6 +2,7 @@ package de.maju.domain.subject
 
 import com.maju.annotations.RepositoryProxy
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
+import io.quarkus.panache.common.Page
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -9,6 +10,11 @@ import javax.enterprise.context.ApplicationScoped
     converter = SubjectMapper::class
 )
 class SubjectRepository : PanacheRepository<Subject> {
+
+    fun findByQuery(page: Int, pageSize: Int): List<Subject> {
+        return findAll().page(Page.of(page, pageSize)).list()
+    }
+
     fun save(subject: Subject): Subject {
         val old = subject.id?.let { findById(it) }
 

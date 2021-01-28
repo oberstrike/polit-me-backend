@@ -1,9 +1,9 @@
-package de.maju.domain.question
+package de.maju.rest.domain.question
 
 import de.maju.domain.comments.CommentDTO
-import de.maju.util.AbstractRestTest
-import de.maju.util.DockerTestResource
-import de.maju.util.TestHelper
+import de.maju.domain.question.QuestionDTO
+import de.maju.rest.util.AbstractRestTest
+import de.maju.rest.util.DockerTestResource
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.AfterEach
@@ -24,7 +24,7 @@ class QuestionResourceTest : AbstractRestTest() {
 
     @Test
     fun addAQuestionAndDeleteIt() {
-        val question = QuestionDTO(owner = "Markus", dataFile= TestHelper.createDataFileDTO())
+        val question = QuestionDTO(owner = "Markus")
 
         withSubject {
             val updatedSubject = subjectController.addQuestionToSubject(it, question)
@@ -45,13 +45,11 @@ class QuestionResourceTest : AbstractRestTest() {
         withQuestion { question, _ ->
             val owner = "oberstrike"
             val size = 1
-            val toUpdate = question.copy(owner = owner, dataFile= TestHelper.createDataFileDTO(size))
+            val toUpdate = question.copy(owner = owner)
 
             val updated = questionController.updateQuestion(toUpdate)
             Assertions.assertNotNull(updated)
             Assertions.assertNotNull(updated!!.owner)
-            Assertions.assertNotNull(updated.dataFile)
-            Assertions.assertEquals(size, updated.dataFile!!.content.size)
             Assertions.assertEquals(owner, updated.owner)
         }
     }
@@ -60,13 +58,11 @@ class QuestionResourceTest : AbstractRestTest() {
     fun updateQuestionWithCommentTest() {
         withComment { question, comment ->
             val owner = "New owner"
-            val content= TestHelper.createDataFileDTO(2)
 
-            val toUpdate = question.copy(owner = owner, dataFile=content)
+            val toUpdate = question.copy(owner = owner)
             val updated = questionController.updateQuestion(toUpdate)
             Assertions.assertNotNull(updated)
             Assertions.assertNotNull(updated!!.owner)
-            Assertions.assertEquals(content.content.size, updated.dataFile!!.content.size)
             Assertions.assertEquals(owner, updated.owner)
 
             val comments = updated.comments

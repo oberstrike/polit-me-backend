@@ -1,11 +1,11 @@
-package de.maju.util.keycloak
+package de.maju.rest.util.keycloak
 
 
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import de.maju.util.IContainerCreator
-import de.maju.util.UserAuthClient
+import de.maju.rest.util.IContainerCreator
+import de.maju.rest.util.UserAuthClient
 import org.testcontainers.containers.GenericContainer
 
 

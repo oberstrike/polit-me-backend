@@ -1,6 +1,6 @@
 package de.maju.domain.comments
 
-import de.maju.admin.KeycloakUser
+import de.maju.domain.admin.KeycloakUser
 import de.maju.domain.question.Question
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import java.time.LocalDateTime

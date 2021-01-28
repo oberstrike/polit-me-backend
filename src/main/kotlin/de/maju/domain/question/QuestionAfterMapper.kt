@@ -1,9 +1,11 @@
 package de.maju.domain.question
 
 import de.maju.domain.comments.CommentRepository
+import de.maju.domain.data.DataFileDTO
 import de.maju.domain.data.DataFileMapper
 import de.maju.domain.data.DataFileRepository
 import de.maju.domain.subject.SubjectRepository
+import de.maju.util.Validator
 import org.mapstruct.AfterMapping
 import org.mapstruct.MappingTarget
 import javax.enterprise.context.ApplicationScoped
@@ -24,8 +26,13 @@ class QuestionAfterMapper {
     @Inject
     lateinit var dataFileMapper: DataFileMapper
 
+    @Inject
+    lateinit var dataFileValidator: Validator<DataFileDTO>
+
     @AfterMapping
     fun mapDTO(dto: QuestionDTO, @MappingTarget question: Question) {
+        // question.created = LocalDateMapper.asLocalDateTime(dto.created) ?: LocalDateTime.now()
+
         val subjectId = dto.subject ?: return
         val subject = subjectRepository.findById(subjectId)
         if (subject != null) {
@@ -43,16 +50,10 @@ class QuestionAfterMapper {
             }
         }
 
-        val dataFileDTO = dto.dataFile
-        if (dataFileDTO != null) {
-            val id = dataFileDTO.id
-            if (id != null) {
-                val dataFile = dataFileRepository.findById(id)
-                if (dataFile != null) {
-                    question.dataFile = dataFile
-                }
-            } else {
-                val dataFile = dataFileRepository.save(dataFileMapper.convertDTOToModel(dataFileDTO))
+        val dataFileDTOId = dto.dataFile
+        if (dataFileDTOId != null) {
+            val dataFile = dataFileRepository.findById(dataFileDTOId)
+            if (dataFile != null) {
                 question.dataFile = dataFile
             }
         }
@@ -66,6 +67,7 @@ class QuestionAfterMapper {
         if (subjectId != null) {
             dto.subject = subjectId
         }
+        dto.dataFile = question.dataFile?.id
 
     }
 

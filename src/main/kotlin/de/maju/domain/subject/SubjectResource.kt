@@ -28,7 +28,10 @@ class SubjectResource(
 ) : ISubjectResource {
 
     @OASPath(path = "/all")
-    override fun getSubjects() = subjectService.findAll()
+    override fun getSubjectsByQuery(
+        @QueryParam("page") page: Int?,
+        @QueryParam("pageSize") pageSize: Int?
+    ) = subjectService.getSubjectsByQuery(page ?: 0, pageSize ?: 10)
 
 
     @OASPath(path = "/id/{id}")
