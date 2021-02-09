@@ -3,7 +3,9 @@ package de.maju.config.openapi
 import org.eclipse.microprofile.openapi.OASFilter
 import org.eclipse.microprofile.openapi.models.OpenAPI
 import org.eclipse.microprofile.openapi.models.media.Schema
+import org.eclipse.microprofile.openapi.models.responses.APIResponse
 import org.eclipse.microprofile.openapi.models.servers.Server
+import javax.ws.rs.core.MediaType
 
 abstract class AbstractOASFilter : OASFilter, IFilterSchema {
 

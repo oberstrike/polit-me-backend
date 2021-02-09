@@ -10,12 +10,6 @@ class ModelReader : OASModelReader {
 
     override fun buildModel(): OpenAPI {
         val api = OpenAPIImpl()
-        val schema = SchemaImpl("Array2")
-
-        val components = ComponentsImpl()
-        components.addSchema("Array2", schema)
-
-        api.components(components)
         return api
     }
 }

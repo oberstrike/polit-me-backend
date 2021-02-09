@@ -32,7 +32,7 @@ class SubjectController {
 
 
     fun getAll(): List<SubjectDTO>? {
-        val response = controller.sendGet("/api/subjects/all")
+        val response = controller.sendGet("/api/subjects")
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
         val json = response.body.asString()
@@ -40,7 +40,7 @@ class SubjectController {
     }
 
     fun addSubjectDTO(subjectDTO: SubjectDTO): SubjectDTO? {
-        val response = controller.sendPost("/api/subjects", body = controller.toJson(subjectDTO))
+        val response = controller.sendPost("/api/subjects", body = controller.toJson(subjectDTO), file = null)
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
         val json = response.body.asString()
@@ -72,7 +72,7 @@ class SubjectController {
     fun addQuestionToSubject(subjectDTO: SubjectDTO, questionDTO: QuestionDTO): SubjectDTO?{
         val json = controller.toJson(questionDTO)
 
-        val response = controller.sendPost("/api/subjects/id/${subjectDTO.id}/questions", json)
+        val response = controller.sendPost("/api/subjects/id/${subjectDTO.id}/questions", json, file = null)
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
 

@@ -39,6 +39,7 @@ class CustomExceptionHandler : ExceptionMapper<RuntimeException> {
 
 
     override fun toResponse(exception: RuntimeException): Response {
+
         val statusCode = when (exception) {
             is BadRequestException -> 400
             is UnauthorizedException -> 401
@@ -53,7 +54,7 @@ class CustomExceptionHandler : ExceptionMapper<RuntimeException> {
             message = exception.message ?: ""
         )
 
-        LOG.info("There was an error: $statusCode: ${error.message}")
+        LOG.error("There was an error: $statusCode: ${error.message}")
         return Response.status(statusCode).entity(error).build()
     }
 }

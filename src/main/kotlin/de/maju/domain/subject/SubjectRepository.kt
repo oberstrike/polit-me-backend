@@ -3,6 +3,7 @@ package de.maju.domain.subject
 import com.maju.annotations.RepositoryProxy
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
+import io.quarkus.panache.common.Sort
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
@@ -11,8 +12,8 @@ import javax.enterprise.context.ApplicationScoped
 )
 class SubjectRepository : PanacheRepository<Subject> {
 
-    fun findByQuery(page: Int, pageSize: Int): List<Subject> {
-        return findAll().page(Page.of(page, pageSize)).list()
+    fun findByQuery(sort: String, direction: String, page: Int, pageSize: Int): List<Subject> {
+        return findAll(Sort.by(sort, Sort.Direction.valueOf(direction))).page(Page.of(page, pageSize)).list()
     }
 
     fun save(subject: Subject): Subject {

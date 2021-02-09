@@ -5,9 +5,13 @@ import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.When
 import io.restassured.response.Response
+import io.restassured.specification.MultiPartSpecification
 import org.eclipse.microprofile.config.inject.ConfigProperty
+import org.keycloak.common.util.MimeTypeUtil
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+import javax.ws.rs.core.MediaType
+
 
 @ApplicationScoped
 class Controller {
@@ -69,7 +73,7 @@ class Controller {
         bearerToken: String? = null,
         auth: Pair<String, String>? = null
     ): Response {
-        return preparePostBody(auth, bearerToken, body).When {
+        return preparePostBody(auth, bearerToken, body, null).When {
             put(path)
         }
     }
@@ -84,17 +88,19 @@ class Controller {
             path = path,
             body = toJson(body),
             bearerToken = bearerToken,
-            auth = auth
+            auth = auth,
+            file = null
         )
     }
 
     fun sendPost(
         path: String,
-        body: String,
+        body: String? = null,
         bearerToken: String? = null,
-        auth: Pair<String, String>? = null
+        auth: Pair<String, String>? = null,
+        file: MultiPartSpecification? = null
     ): Response {
-        return preparePostBody(auth, bearerToken, body).When {
+        return preparePostBody(auth, bearerToken, body, file).When {
             post(path)
         }
     }
@@ -102,7 +108,8 @@ class Controller {
     private fun preparePostBody(
         auth: Pair<String, String>?,
         bearerToken: String?,
-        body: String
+        body: String?,
+        file: MultiPartSpecification?
     ) = Given {
         if (auth != null)
             auth().preemptive().basic(auth.first, auth.second)
@@ -110,8 +117,18 @@ class Controller {
             auth().preemptive().oauth2(bearerToken)
         port(port)
         log().all()
-        body(body)
-        contentType(ContentType.JSON)
+        if (body != null) {
+            body(body)
+        }
+        if (file != null) {
+            multiPart(file)
+        }
+
+        if(file != null){
+            contentType(MediaType.MULTIPART_FORM_DATA)
+        }else{
+            contentType(ContentType.JSON)
+        }
     }
 
     fun sendPatch(

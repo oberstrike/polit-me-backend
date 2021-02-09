@@ -1,22 +1,23 @@
-package de.maju.domain.data
+package de.maju.domain.datafile
 
+import de.maju.domain.file.VideoFileRepository
 import org.mapstruct.AfterMapping
 import org.mapstruct.MappingTarget
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class DataFileAfterMapper {
+class DataFileAfterMapper(
+    private val videoFileRepository: VideoFileRepository
+) {
 
     @AfterMapping
     fun mapDTO(dto: DataFileDTO, @MappingTarget dataFile: DataFile) {
-        val content = Base64.getEncoder().encode(dto.content?.toByteArray())
-        dataFile.content = content
+        dataFile.videoFile = dto.id?.let { videoFileRepository.findById(it) }
     }
 
     @AfterMapping
     fun mapModel(@MappingTarget dto: DataFileDTO, dataFile: DataFile) {
-        val content = Base64.getEncoder().encodeToString(dataFile.content)
-        dto.content = content
+        dto.videoFile = dataFile.videoFile?.id
     }
 }

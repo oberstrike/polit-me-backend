@@ -4,7 +4,7 @@ package de.maju.rest.util
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepositoryProxy
 import de.maju.rest.domain.comment.CommentController
-import de.maju.domain.data.DataFileDTO
+import de.maju.domain.datafile.DataFileDTO
 import de.maju.rest.domain.question.QuestionController
 import de.maju.rest.domain.subject.SubjectController
 import de.maju.domain.question.QuestionDTO
@@ -145,6 +145,6 @@ object TestHelper {
     fun createCommentDTO() = CommentDTO(content = "Comment ${Random.nextInt(100)}")
 
     fun createDataFileDTO(size: Int = Random.nextInt(100)) =
-        DataFileDTO(content = Base64.getEncoder().encodeToString(ByteArray(size)), name = "test.png", extension = "png")
+        DataFileDTO(name = "test.png", extension = "png")
 
 }

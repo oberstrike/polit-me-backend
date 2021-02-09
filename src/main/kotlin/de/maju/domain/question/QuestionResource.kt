@@ -3,24 +3,18 @@ package de.maju.domain.question
 import com.maju.openapi.annotations.OASParameter
 import com.maju.openapi.annotations.OASPath
 import com.maju.openapi.annotations.OASResource
-import com.maju.openapi.annotations.OASSchema
 import com.maju.openapi.codegen.RequestMethod
 import com.maju.openapi.codegen.generators.annotations.schema.OASBaseSchemaEnum
 import de.maju.domain.comments.CommentDTO
-import de.maju.domain.data.DataFile
-import de.maju.domain.data.DataFileDTO
+import de.maju.domain.datafile.DataFileDTO
 import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.SecurityIdentity
 import org.apache.commons.io.IOUtils
-import org.eclipse.microprofile.openapi.models.parameters.RequestBody
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput
 import java.io.InputStream
-import javax.ws.rs.BadRequestException
-import javax.ws.rs.DefaultValue
-import javax.ws.rs.PathParam
-import javax.ws.rs.QueryParam
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.MultivaluedMap
 import javax.ws.rs.core.Response
@@ -29,7 +23,7 @@ import javax.ws.rs.core.Response
 const val questionPath = "/api/questions"
 
 
-@OASResource(path = questionPath, tagName = "Question")
+@OASResource(path = questionPath, tagName = "Question", security = "openIdConnect")
 class QuestionResource(
     private val questionService: QuestionService,
     private val securityIdentity: SecurityIdentity
@@ -50,21 +44,14 @@ class QuestionResource(
     }
 
 
-    @OASPath(produces = MediaType.APPLICATION_OCTET_STREAM,
-        returnTypeSchema = OASBaseSchemaEnum.BINARY_STRING)
-    override fun fileDownload(
-        @PathParam("id") id: Long
-    ): Response {
-        return Response.ok().build()
-    }
-
 
     @OASPath(
         requestMethod = RequestMethod.POST,
         consumes = MediaType.MULTIPART_FORM_DATA,
-        path = "/id/{id}/file"
+        path = "/id/{id}/file",
+        returnTypeSchema = OASBaseSchemaEnum.STRING_WITH_SPACES
     )
-    override fun fileUpload(
+    override fun addFileToQuestionById(
         @PathParam("id") id: Long,
         @MultipartForm @OASParameter(baseSchema = OASBaseSchemaEnum.FILE) multipartBody: MultipartFormDataInput
     ): Response {
@@ -81,12 +68,11 @@ class QuestionResource(
             val byteArray = IOUtils.toByteArray(input)
 
             val dataFile = DataFileDTO(
-                content = byteArray!!.contentToString(),
                 name = filename,
                 extension = fileExtension
             )
 
-            questionService.addDataFileToQuestionById(id, dataFile)
+            questionService.setDataFileToQuestionById(id, dataFile, byteArray)
         }
         return Response.ok().build()
     }
@@ -109,12 +95,12 @@ class QuestionResource(
         return questionService.update(questionDTO)
     }
 
-    @OASPath(path = "/id/{id}", isProtected = false)
+    @OASPath(path = "/id/{id}", security = "")
     override fun getQuestionById(@PathParam("id") id: Long): QuestionDTO {
         return questionService.findById(id)
     }
 
-    @OASPath(path = "/id/{id}/comments", requestMethod = RequestMethod.POST, isProtected = true)
+    @OASPath(path = "/id/{id}/comments", requestMethod = RequestMethod.POST)
     @Authenticated
     override fun addCommentToQuestionById(@PathParam("id") id: Long, commentDTO: CommentDTO): QuestionDTO {
         val userId = (securityIdentity.principal as OidcJwtCallerPrincipal).claims.getClaimValueAsString("sub")

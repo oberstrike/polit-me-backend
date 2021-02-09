@@ -1,7 +1,7 @@
 package de.maju.domain.question
 
 import com.maju.annotations.RepositoryProxy
-import de.maju.domain.data.DataFileRepository
+import de.maju.domain.datafile.DataFileRepository
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import javax.enterprise.context.ApplicationScoped

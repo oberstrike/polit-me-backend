@@ -1,4 +1,4 @@
-package de.maju.domain.data
+package de.maju.domain.datafile
 
 import com.maju.utils.IConverter
 import org.mapstruct.InjectionStrategy
@@ -14,12 +14,12 @@ import org.mapstruct.Mappings
 interface DataFileMapper : IConverter<DataFile, DataFileDTO> {
 
     @Mappings(
-        Mapping(target = "content", ignore = true),
+        Mapping(target = "videoFile", ignore = true),
     )
     override fun convertDTOToModel(dto: DataFileDTO): DataFile
 
     @Mappings(
-        Mapping(target = "content", ignore = true),
+        Mapping(target = "videoFile", ignore = true),
     )
     override fun convertModelToDTO(model: DataFile): DataFileDTO
 }

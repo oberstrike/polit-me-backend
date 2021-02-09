@@ -1,4 +1,4 @@
-package de.maju.domain.data
+package de.maju.domain.datafile
 
 import com.maju.openapi.annotations.OASProperty
 import com.maju.openapi.annotations.OASSchema
@@ -9,8 +9,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema
 @Schema(name = "DataFile")
 data class DataFileDTO(
     override val id: Long? = null,
-    @OASProperty(OASBaseSchemaEnum.BINARY_STRING)
-    override var content: String? = null,
+    override var videoFile: Long? = null,
     override var name: String,
     override var extension: String
 ) : IDataFileDTO

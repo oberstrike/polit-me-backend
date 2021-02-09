@@ -1,9 +1,9 @@
 package de.maju.domain.question
 
 import de.maju.domain.comments.CommentRepository
-import de.maju.domain.data.DataFileDTO
-import de.maju.domain.data.DataFileMapper
-import de.maju.domain.data.DataFileRepository
+import de.maju.domain.datafile.DataFileDTO
+import de.maju.domain.datafile.DataFileMapper
+import de.maju.domain.datafile.DataFileRepository
 import de.maju.domain.subject.SubjectRepository
 import de.maju.util.Validator
 import org.mapstruct.AfterMapping

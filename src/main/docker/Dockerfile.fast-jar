@@ -25,6 +25,13 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
 ARG RUN_JAVA_VERSION=1.3.8
+ARG HTTP_PORT=8080
+ARG DB_USERNAME=postgres
+ARG DB_PASSWORD=mewtu123
+ARG DB_HOST=localhost
+ARG DB_PORT=5432
+ARG DB_NAME=politme
+
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # Install java and the run-java script
 # Also set up permissions for user `1001`

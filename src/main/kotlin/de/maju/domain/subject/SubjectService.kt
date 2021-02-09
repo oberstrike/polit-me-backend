@@ -1,6 +1,6 @@
 package de.maju.domain.subject
 
-import de.maju.domain.data.DataFileRepositoryProxy
+import de.maju.domain.datafile.DataFileRepositoryProxy
 import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionRepository
 import de.maju.domain.question.QuestionRepositoryProxy
@@ -103,8 +103,8 @@ class SubjectService {
     }
 
     @Transactional
-    fun getSubjectsByQuery(page: Int = 0, pageSize: Int = 10): List<SubjectDTO> {
-        return subjectRepositoryProxy.findByQuery(page, pageSize)
+    fun getSubjectsByQuery(page: Int = 0, pageSize: Int = 10, sort: String, direction: String): List<SubjectDTO> {
+        return subjectRepositoryProxy.findByQuery(sort, direction, page, pageSize)
 
     }
 }

@@ -1,17 +1,20 @@
 package de.maju.util
 
+import de.maju.domain.datafile.DataFileRepositoryProxy
 import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
+import javax.inject.Inject
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.annotation.WebFilter
 import javax.servlet.http.HttpServletRequest
+import kotlin.system.measureTimeMillis
 
 @WebFilter("/*")
+@ApplicationScoped
 class LoggingWebFilter : Filter {
-
 
     companion object {
         val LOG: Logger = Logger.getLogger(WebFilter::class.java)
@@ -23,10 +26,15 @@ class LoggingWebFilter : Filter {
         val method = httpServletRequest.method
         val contentLength = httpServletRequest.contentLength
 
-        val message = "[URI: $uri, method: $method, query: ${request.queryString}, content-length: $contentLength ]"
-        LOG.info(message)
 
-        chain.doFilter(request, response)
+        val result = measureTimeMillis {
+            chain.doFilter(request, response)
+        }
+
+        val requestMessage =
+            "[URI: $uri, method: $method, query: ${request.queryString}, content-length: $contentLength, passedTime: $result]"
+
+        LOG.info(requestMessage)
     }
 
 }

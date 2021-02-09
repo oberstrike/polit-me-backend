@@ -29,7 +29,6 @@ class SubjectResourceTest : AbstractRestTest() {
         val getAll = subjectController.getAll()
         assert(getAll!!.isEmpty())
 
-
         val content = "Content123"
         val added = subjectController.addSubjectDTO(SubjectDTO(content = content))
         Assertions.assertNotNull(added)

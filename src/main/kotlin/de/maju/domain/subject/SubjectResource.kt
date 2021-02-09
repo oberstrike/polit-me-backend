@@ -4,12 +4,12 @@ import com.maju.openapi.annotations.OASPath
 import com.maju.openapi.annotations.OASResource
 import com.maju.openapi.codegen.RequestMethod
 import de.maju.domain.question.QuestionDTO
+import io.quarkus.panache.common.Sort
 import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.validation.Validator
 import javax.ws.rs.BadRequestException
@@ -21,17 +21,22 @@ import javax.ws.rs.core.MediaType
 @ApplicationScoped
 @OASResource(path = "/api/subjects", tagName = "Subject")
 class SubjectResource(
-    @Inject
     private val subjectService: SubjectService,
-    @Inject
     private val validator: Validator
 ) : ISubjectResource {
 
-    @OASPath(path = "/all")
+    @OASPath
     override fun getSubjectsByQuery(
+        @QueryParam("sort") sort: String?,
+        @QueryParam("dir") dir: String?,
         @QueryParam("page") page: Int?,
         @QueryParam("pageSize") pageSize: Int?
-    ) = subjectService.getSubjectsByQuery(page ?: 0, pageSize ?: 10)
+    ) = subjectService.getSubjectsByQuery(
+        page = page ?: 0,
+        pageSize = pageSize ?: 10,
+        sort = sort ?: "id",
+        direction = dir ?: Sort.Direction.Ascending.toString()
+    )
 
 
     @OASPath(path = "/id/{id}")

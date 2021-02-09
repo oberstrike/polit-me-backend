@@ -1,4 +1,4 @@
-package de.maju.domain.data
+package de.maju.domain.datafile
 
 import de.maju.util.DataSize
 import de.maju.util.Validator
@@ -13,13 +13,10 @@ class DataFileValidator(
     private val maxFileSize = DataSize.parse(maxFileSizeString)
 
     override fun validate(target: DataFileDTO): Boolean {
-        if (target.content == null) {
+        if (target.videoFile == null) {
             return false
         }
 
-        if (target.content!!.toByteArray().size > maxFileSize.bytes) {
-            return false
-        }
 
         if (target.name.length < 0) {
             return false

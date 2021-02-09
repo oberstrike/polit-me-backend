@@ -18,8 +18,8 @@ val quarkusPlatformVersion: String by project
 dependencies {
     implementation("org.mapstruct:mapstruct:1.4.1.Final")
     kapt("org.mapstruct:mapstruct-processor:1.4.1.Final")
-    implementation("com.maju.openapi:oas-generator:1.0.2")
-    kapt("com.maju.openapi:oas-generator:1.0.2")
+    implementation("com.maju.openapi:oas-generator:1.0.3")
+    kapt("com.maju.openapi:oas-generator:1.0.3")
     implementation("com.maju.proxy:proxy-generator:1.0.5")
     kapt("com.maju.proxy:proxy-generator:1.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")

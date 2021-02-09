@@ -99,6 +99,20 @@ class QuestionResourceTest : AbstractRestTest() {
     }
 
     @Test
+    fun addFileToQuestionTest() {
+        withQuestion { question, subject ->
+            val filename = "MeinTraum.pdf"
+            val result = question.id?.let { questionController.addFileToQuestionById(it, filename) }
+            if (result != null) {
+                Assertions.assertTrue(result)
+            } else {
+                Assertions.assertTrue(false)
+            }
+        }
+
+    }
+
+    @Test
     fun addCommentToQuestionTest() {
         withRegistered { _, jwtToken ->
             withQuestion { question, _ ->

@@ -2,7 +2,7 @@ package de.maju.domain.question
 
 import com.maju.utils.IConverter
 import de.maju.domain.comments.CommentMapper
-import de.maju.domain.data.DataFileMapper
+import de.maju.domain.datafile.DataFileMapper
 import de.maju.util.LocalDateTimeMapper
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper

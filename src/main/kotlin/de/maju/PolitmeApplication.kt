@@ -15,6 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme
 import org.eclipse.microprofile.openapi.annotations.servers.Server
 import javax.ws.rs.core.Application
 
+const val securitySchemeName =  "openIdConnect"
 
 @QuarkusMain
 class Main {
@@ -43,7 +44,7 @@ class Main {
     components = Components(
         securitySchemes = [
             SecurityScheme(
-                securitySchemeName = "openIdConnect",
+                securitySchemeName = securitySchemeName,
                 type = SecuritySchemeType.OPENIDCONNECT,
                 openIdConnectUrl = "http://localhost:8280/auth/realms/quarkus/.well-known/openid-configuration"
             )

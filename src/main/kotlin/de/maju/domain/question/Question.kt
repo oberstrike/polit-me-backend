@@ -1,7 +1,7 @@
 package de.maju.domain.question
 
 import de.maju.domain.comments.Comment
-import de.maju.domain.data.DataFile
+import de.maju.domain.datafile.DataFile
 import de.maju.domain.subject.Subject
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import java.time.LocalDateTime

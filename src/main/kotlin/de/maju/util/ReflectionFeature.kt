@@ -3,9 +3,9 @@ package de.maju.util
 import de.maju.domain.comments.CommentMapper
 import de.maju.domain.comments.CommentRepository
 import de.maju.domain.comments.CommentRepositoryProxy
-import de.maju.domain.data.DataFileMapper
-import de.maju.domain.data.DataFileRepository
-import de.maju.domain.data.DataFileRepositoryProxy
+import de.maju.domain.datafile.DataFileMapper
+import de.maju.domain.datafile.DataFileRepository
+import de.maju.domain.datafile.DataFileRepositoryProxy
 import de.maju.domain.question.QuestionMapper
 import de.maju.domain.question.QuestionRepository
 import de.maju.domain.question.QuestionRepositoryProxy

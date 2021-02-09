@@ -4,17 +4,16 @@ import de.maju.domain.admin.KeycloakUserRepository
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepository
 import de.maju.domain.comments.CommentRepositoryProxy
-import de.maju.domain.data.DataFileDTO
-import de.maju.domain.data.DataFileRepository
-import de.maju.domain.data.DataFileRepositoryProxy
+import de.maju.domain.datafile.*
+import de.maju.domain.file.VideoFile
+import de.maju.domain.file.VideoFileService
 import de.maju.util.Validator
-import java.io.File
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.BadRequestException
 import javax.ws.rs.NotFoundException
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class QuestionService {
@@ -35,7 +34,7 @@ class QuestionService {
     lateinit var commentRepository: CommentRepository
 
     @Inject
-    lateinit var dataFileRepositoryProxy: DataFileRepositoryProxy
+    lateinit var dataFileService: DataFileService
 
     @Inject
     lateinit var dataFileRepository: DataFileRepository
@@ -43,29 +42,58 @@ class QuestionService {
     @Inject
     lateinit var dataFileValidator: Validator<DataFileDTO>
 
+    @Inject
+    lateinit var videoFileService: VideoFileService
+
+    @Inject
+    lateinit var fileSystemRepository: FileSystemRepository
+
     @Transactional
-    fun addDataFileToQuestionById(questionId: Long, dataFile: DataFileDTO) {
+    fun setDataFileToQuestionById(questionId: Long, dataFile: DataFileDTO, byteArray: ByteArray) {
+        val question = questionRepository.findById(questionId)
+            ?: throw NotFoundException("No question with the ID $questionId was found")
+        val oldDataFile = question.dataFile
+        if (oldDataFile != null) {
+            val videoFile = oldDataFile.videoFile
+            if (videoFile != null) {
+                val fileName = videoFile.fileName
+                fileSystemRepository.delete(fileName)
+            }
+        }
+
+
+        val fileName = UUID.randomUUID().toString()
+        fileSystemRepository.save(byteArray, fileName)
+        val videoFile = VideoFile(fileName = fileName, byteArray)
+
+        videoFileService.save(videoFile)
+        dataFile.videoFile = videoFile.id
+
         if (!dataFileValidator.validate(dataFile))
             throw BadRequestException("There was an error while adding the file ${dataFile.name}")
 
-        val question = questionRepository.findById(questionId)
-            ?: throw NotFoundException("No question with the ID $questionId was found")
 
-        val savedDataFile = dataFileRepositoryProxy.save(dataFile)
-        val persistedDataFile = dataFileRepository.findById(savedDataFile.id!!)
+        val savedDataFile = dataFileService.save(dataFile)
+        val persistedDataFile = dataFileRepository.findById(savedDataFile?.id!!)
+        persistedDataFile?.videoFile = videoFile
         question.dataFile = persistedDataFile
     }
 
     @Transactional
     fun deleteById(id: Long) {
-        questionRepositoryProxy.findById(id) ?: throw NotFoundException("No question with the ID $id was found.")
+        val question =
+            questionRepository.findById(id) ?: throw NotFoundException("No question with the ID $id was found.")
+        val dataFileId = question.dataFile?.id
+        if (dataFileId != null) {
+            question.dataFile = null
+            dataFileService.deleteById(dataFileId)
+        }
         questionRepositoryProxy.deleteById(id)
     }
 
     @Transactional
     fun update(questionDTO: QuestionDTO): QuestionDTO {
         if (questionDTO.id == null) throw BadRequestException("The id of the question to be updated is missing.")
-        //TODO check whether the content is smaller than 20 MB or greater.
 
         try {
             return questionRepositoryProxy.update(questionDTO)
@@ -90,7 +118,6 @@ class QuestionService {
             comment.keycloakUser = user
             question.comments.add(comment)
             comment.question = question
-
             commentRepository.save(comment)
         } catch (ex: Exception) {
             throw BadRequestException(ex.message)
