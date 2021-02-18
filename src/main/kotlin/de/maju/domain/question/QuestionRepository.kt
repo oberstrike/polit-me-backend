@@ -2,8 +2,10 @@ package de.maju.domain.question
 
 import com.maju.annotations.RepositoryProxy
 import de.maju.domain.datafile.DataFileRepository
+import de.maju.util.Direction
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
+import io.quarkus.panache.common.Sort
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -14,8 +16,8 @@ class QuestionRepository : PanacheRepository<Question> {
     @Inject
     lateinit var dataFileRepository: DataFileRepository
 
-    fun findByQuery(page: Int, pageSize: Int): List<Question> {
-        return findAll().page(Page.of(page, pageSize)).list()
+    fun findByQuery(page: Int, pageSize: Int, sort: String, dir: String): List<Question> {
+        return findAll(Sort.by(sort, Direction.ofAbbreviation(dir))).page(Page.of(page, pageSize)).list()
     }
 
     fun save(question: Question): Question {

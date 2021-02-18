@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.4.10"
-    kotlin("plugin.allopen") version "1.4.10"
-    kotlin("kapt") version "1.4.10"
+    kotlin("jvm") version "1.4.20"
+    kotlin("plugin.allopen") version "1.4.20"
+    kotlin("kapt") version "1.4.20"
     id("io.quarkus")
 }
 
@@ -16,8 +16,8 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
-    implementation("org.mapstruct:mapstruct:1.4.1.Final")
-    kapt("org.mapstruct:mapstruct-processor:1.4.1.Final")
+    implementation("org.mapstruct:mapstruct:1.4.2.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
     implementation("com.maju.openapi:oas-generator:1.0.3")
     kapt("com.maju.openapi:oas-generator:1.0.3")
     implementation("com.maju.proxy:proxy-generator:1.0.5")
@@ -27,7 +27,7 @@ dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-keycloak-authorization")
     implementation("io.quarkus:quarkus-hibernate-orm-panache-kotlin")
-    implementation("io.quarkus:quarkus-hibernate-validator")
+    implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-resteasy-multipart")
     implementation("io.quarkus:quarkus-oidc")
@@ -36,18 +36,16 @@ dependencies {
     implementation("io.quarkus:quarkus-scheduler")
     implementation("io.quarkus:quarkus-resteasy-jackson")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.10")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
-    implementation("io.quarkus:quarkus-flyway")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20")
+    implementation("io.quarkus:quarkus-arc")
 
     implementation("io.quarkus:quarkus-undertow")
-    implementation("org.jadira.usertype:usertype.core:7.0.0.CR1")
 
     implementation("io.quarkus:quarkus-resteasy")
     testImplementation("io.quarkus:quarkus-test-security")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("io.quarkus:quarkus-panache-mock")
     testImplementation("io.rest-assured:kotlin-extensions")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.quarkus:quarkus-junit5-mockito")
@@ -58,7 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.quarkus:quarkus-keycloak-admin-client")
 
-    val junitJupiterVersion = "5.4.2"
+    val junitJupiterVersion = "5.7.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")

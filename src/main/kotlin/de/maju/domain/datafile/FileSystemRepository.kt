@@ -5,7 +5,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
-import org.flywaydb.core.internal.resource.filesystem.FileSystemResource
 import java.io.File
 import java.lang.Exception
 import javax.inject.Inject

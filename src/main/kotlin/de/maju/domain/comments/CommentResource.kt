@@ -1,39 +1,43 @@
 package de.maju.domain.comments
 
-import com.maju.openapi.annotations.OASPath
-import com.maju.openapi.annotations.OASResource
-import com.maju.openapi.codegen.RequestMethod
-import javax.enterprise.context.ApplicationScoped
-import javax.ws.rs.BadRequestException
-import javax.ws.rs.PathParam
-import javax.ws.rs.QueryParam
+import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import org.eclipse.microprofile.openapi.annotations.tags.Tags
+import javax.ws.rs.*
 
 const val commentPath = "/api/comments"
 
-@ApplicationScoped
-@OASResource(path = commentPath, tagName = "Comments", security = "openIdConnect")
+@Path(value = "/api/comments")
+@Tags(Tag(name = "Comments", description = ""))
 class CommentResource(
     private val commentService: CommentService
-) : ICommentResource {
+) {
 
-    @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}")
-    override fun deleteCommentById(@PathParam("id") id: Long) {
+    @DELETE
+    @Produces(value = ["text/plain"])
+    @Consumes(value = ["application/json"])
+    @Path(value = "/id/{id}")
+    fun deleteCommentById(@PathParam("id") id: Long) {
         val isDeleted = commentService.deleteById(id)
         if (!isDeleted) throw BadRequestException("There was an error while deleting $id")
     }
 
-    @OASPath(path = "/id/{id}")
-    override fun findCommentById(@PathParam("id") id: Long): CommentDTO {
+    @GET
+    @Produces(value = ["application/json"])
+    @Path(value = "/id/{id}")
+    fun findCommentById(@PathParam("id") id: Long): CommentDTO {
         return commentService.findById(id)
     }
 
-    @OASPath(requestMethod = RequestMethod.PUT)
-    override fun updateComment(commentDTO: CommentDTO): CommentDTO {
+    @PUT
+    @Produces(value = ["application/json"])
+    @Consumes(value = ["application/json"])
+    fun updateComment(commentDTO: CommentDTO): CommentDTO {
         return commentService.update(commentDTO)
     }
 
-    @OASPath
-    override fun findCommentByQuery(@QueryParam("page") page: Int, @QueryParam("pageSize") pageSize: Int): List<CommentDTO> {
+    @GET
+    @Produces(value = ["application/json"])
+    fun findCommentByQuery(@QueryParam("page") page: Int, @QueryParam("pageSize") pageSize: Int): List<CommentDTO> {
         return commentService.findAll(page, pageSize)
     }
 

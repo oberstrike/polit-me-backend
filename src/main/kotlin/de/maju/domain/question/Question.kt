@@ -23,7 +23,7 @@ class Question(
     )
     var comments: MutableList<Comment> = mutableListOf()
 
-    var isPublic: Boolean = false
+    var public: Boolean = false
 
     @OneToOne(fetch = FetchType.LAZY,
         cascade = [CascadeType.REMOVE, CascadeType.REFRESH],

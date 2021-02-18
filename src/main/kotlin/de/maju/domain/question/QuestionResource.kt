@@ -11,6 +11,8 @@ import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.SecurityIdentity
 import org.apache.commons.io.IOUtils
+import org.eclipse.microprofile.openapi.annotations.tags.Tag
+import org.eclipse.microprofile.openapi.annotations.tags.Tags
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput
 import java.io.InputStream
@@ -23,35 +25,39 @@ import javax.ws.rs.core.Response
 const val questionPath = "/api/questions"
 
 
-@OASResource(path = questionPath, tagName = "Question", security = "openIdConnect")
+@Path(value = "/api/questions")
+@Tags(Tag(name = "Question", description = ""))
 class QuestionResource(
     private val questionService: QuestionService,
     private val securityIdentity: SecurityIdentity
-) : IQuestionResource {
+) {
 
 
-    @OASPath(requestMethod = RequestMethod.DELETE, path = "/id/{id}", consumes = MediaType.TEXT_PLAIN)
-    override fun deleteQuestionById(@PathParam("id") id: Long) {
+    @DELETE
+    @Produces(value = ["text/plain"])
+    @Consumes(value = ["text/plain"])
+    @Path(value = "/id/{id}")
+    fun deleteQuestionById(@PathParam("id") id: Long) {
         questionService.deleteById(id)
     }
 
-    @OASPath
-    override fun findQuestionByQuery(
-        @QueryParam("page") @DefaultValue("0") page: Int,
-        @QueryParam("pageSize") pageSize: Int
+    @GET
+    @Produces(value = ["application/json"])
+    fun findQuestionByQuery(
+        @QueryParam("page") @DefaultValue("0") page: Int?,
+        @QueryParam("pageSize") pageSize: Int?,
+        @QueryParam("sort") sort: String?,
+        @QueryParam("dir") dir: String?
     ): List<QuestionDTO> {
-        return questionService.findByQuery(page, pageSize)
+        return questionService.findByQuery(page ?: 0, pageSize ?: 10, sort ?: "id", dir ?: "asc")
     }
 
 
-
-    @OASPath(
-        requestMethod = RequestMethod.POST,
-        consumes = MediaType.MULTIPART_FORM_DATA,
-        path = "/id/{id}/file",
-        returnTypeSchema = OASBaseSchemaEnum.STRING_WITH_SPACES
-    )
-    override fun addFileToQuestionById(
+    @POST
+    @Produces(value = ["application/json"])
+    @Consumes(value = ["multipart/form-data"])
+    @Path(value = "/id/{id}/file")
+    fun addFileToQuestionById(
         @PathParam("id") id: Long,
         @MultipartForm @OASParameter(baseSchema = OASBaseSchemaEnum.FILE) multipartBody: MultipartFormDataInput
     ): Response {
@@ -90,19 +96,24 @@ class QuestionResource(
     }
 
 
-    @OASPath(requestMethod = RequestMethod.PUT)
-    override fun updateQuestion(questionDTO: QuestionDTO): QuestionDTO {
+    @PUT
+    fun updateQuestion(questionDTO: QuestionDTO): QuestionDTO {
         return questionService.update(questionDTO)
     }
 
-    @OASPath(path = "/id/{id}", security = "")
-    override fun getQuestionById(@PathParam("id") id: Long): QuestionDTO {
+    @GET
+    @Produces(value = ["application/json"])
+    @Path(value = "/id/{id}")
+    fun getQuestionById(@PathParam("id") id: Long): QuestionDTO {
         return questionService.findById(id)
     }
 
-    @OASPath(path = "/id/{id}/comments", requestMethod = RequestMethod.POST)
+    @POST
+    @Produces(value = ["application/json"])
+    @Consumes(value = ["application/json"])
+    @Path(value = "/id/{id}/comments")
     @Authenticated
-    override fun addCommentToQuestionById(@PathParam("id") id: Long, commentDTO: CommentDTO): QuestionDTO {
+    fun addCommentToQuestionById(@PathParam("id") id: Long, commentDTO: CommentDTO): QuestionDTO {
         val userId = (securityIdentity.principal as OidcJwtCallerPrincipal).claims.getClaimValueAsString("sub")
         return questionService.addCommentToQuestionById(id, commentDTO, userId)
     }

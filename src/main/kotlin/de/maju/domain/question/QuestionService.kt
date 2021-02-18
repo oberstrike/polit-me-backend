@@ -64,7 +64,7 @@ class QuestionService {
 
         val fileName = UUID.randomUUID().toString()
         fileSystemRepository.save(byteArray, fileName)
-        val videoFile = VideoFile(fileName = fileName, byteArray)
+        val videoFile = VideoFile(fileName = fileName,  byteArray)
 
         videoFileService.save(videoFile)
         dataFile.videoFile = videoFile.id
@@ -150,8 +150,8 @@ class QuestionService {
     }
 
     @Transactional
-    fun findByQuery(page: Int, pageSize: Int): List<QuestionDTO> {
-        return questionRepositoryProxy.findByQuery(page, pageSize)
+    fun findByQuery(page: Int, pageSize: Int, sort: String, dir: String): List<QuestionDTO> {
+        return questionRepositoryProxy.findByQuery(page, pageSize, sort, dir)
     }
 
 
