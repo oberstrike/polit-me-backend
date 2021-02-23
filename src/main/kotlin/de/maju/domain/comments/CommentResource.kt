@@ -1,5 +1,6 @@
 package de.maju.domain.comments
 
+import de.maju.util.PagedRequest
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import org.eclipse.microprofile.openapi.annotations.tags.Tags
 import javax.ws.rs.*
@@ -37,8 +38,8 @@ class CommentResource(
 
     @GET
     @Produces(value = ["application/json"])
-    fun findCommentByQuery(@QueryParam("page") page: Int, @QueryParam("pageSize") pageSize: Int): List<CommentDTO> {
-        return commentService.findAll(page, pageSize)
+    fun findCommentByQuery(@BeanParam pagedRequest: PagedRequest): List<CommentDTO> {
+        return commentService.findAll(pagedRequest.page, pageSize = pagedRequest.pageSize)
     }
 
 }

@@ -103,8 +103,14 @@ class SubjectService {
     }
 
     @Transactional
-    fun getSubjectsByQuery(page: Int = 0, pageSize: Int = 10, sort: String, direction: String): List<SubjectDTO> {
-        return subjectRepositoryProxy.findByQuery(sort, direction, page, pageSize)
+    fun getSubjectsByQuery(
+        page: Int = 0,
+        pageSize: Int = 10,
+        sort: String,
+        direction: String,
+        query: SubjectBeanParam
+    ): List<SubjectDTO> {
+        return subjectRepositoryProxy.findByQuery(sort, direction, page, pageSize, query)
 
     }
 }

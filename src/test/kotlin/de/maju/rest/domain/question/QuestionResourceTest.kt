@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.transaction.Transactional
 
-@QuarkusTestResource(DockerTestResource::class)
 @QuarkusTest
 @Transactional
+@QuarkusTestResource(DockerTestResource::class)
+
 class QuestionResourceTest : AbstractRestTest() {
 
     @AfterEach

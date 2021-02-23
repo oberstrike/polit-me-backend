@@ -2,6 +2,8 @@ package de.maju.domain.subject
 
 import com.maju.annotations.RepositoryProxy
 import de.maju.util.Direction
+import de.maju.util.ParamCreator
+import de.maju.util.QueryCreator
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -11,10 +13,29 @@ import javax.enterprise.context.ApplicationScoped
 @RepositoryProxy(
     converter = SubjectMapper::class
 )
-class SubjectRepository : PanacheRepository<Subject> {
+class SubjectRepository(
+    private val subjectPanacheParamCreator: SubjectPanacheParamCreator,
+    private val paramCreator: QueryCreator
+) : PanacheRepository<Subject> {
 
-    fun findByQuery(sort: String, direction: String, page: Int, pageSize: Int): List<Subject> {
-        return findAll(Sort.by(sort, Direction.ofAbbreviation (direction))).page(Page.of(page, pageSize)).list()
+    fun findByQuery(
+        sort: String,
+        direction: String,
+        page: Int,
+        pageSize: Int,
+        subjectBeanParam: SubjectBeanParam
+    ): List<Subject> {
+        val sorting = Sort.by(sort, Direction.ofAbbreviation(direction))
+        val paging = Page.of(page, pageSize)
+        val params = subjectPanacheParamCreator.createParams(subjectBeanParam)
+
+        if (params.isNotEmpty()) {
+            val query = paramCreator.createQuery(params)
+            if (query != null) {
+                return find(query, sorting, params).page(paging).list()
+            }
+        }
+        return findAll(sorting).page(paging).list()
     }
 
     fun save(subject: Subject): Subject {

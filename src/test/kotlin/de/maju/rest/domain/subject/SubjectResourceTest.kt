@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.transaction.Transactional
 
-@QuarkusTestResource(DockerTestResource::class)
 @QuarkusTest
 @Transactional
 class SubjectResourceTest : AbstractRestTest() {
@@ -23,10 +22,9 @@ class SubjectResourceTest : AbstractRestTest() {
         questionService.deleteAll()
     }
 
-
     @Test
-    fun addNewSubjectAndListAll() {
-        val getAll = subjectController.getAll()
+    fun addNewSubjectAndListAllTest() {
+        val getAll = subjectController.getSubjectsByQuery()
         assert(getAll!!.isEmpty())
 
         val content = "Content123"
@@ -34,7 +32,7 @@ class SubjectResourceTest : AbstractRestTest() {
         Assertions.assertNotNull(added)
         assert(added!!.content == content)
 
-        val getAllWithAddedSubject = subjectController.getAll()
+        val getAllWithAddedSubject = subjectController.getSubjectsByQuery()
         assert(getAllWithAddedSubject != null)
 
         assert(getAllWithAddedSubject!!.isNotEmpty())
@@ -57,7 +55,7 @@ class SubjectResourceTest : AbstractRestTest() {
         val subjectDTO = SubjectDTO(content = "content")
         val oldSubjectDTO = subjectController.addSubjectDTO(subjectDTO)
 
-        val all = subjectController.getAll()
+        val all = subjectController.getSubjectsByQuery()
         assert(all!!.isNotEmpty())
         assert(all.contains(oldSubjectDTO))
 

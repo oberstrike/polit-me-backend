@@ -6,10 +6,13 @@ import org.testcontainers.containers.GenericContainer
 
 class DockerTestResource : QuarkusTestResourceLifecycleManager {
 
+
     private val listOfContainerCreator = listOf(
         PostgresContainerCreator(),
         KeycloakContainerCreator()
     )
+
+//    private val listOfContainerCreator = emptyList<IContainerCreator<*>>()
 
     private val listOfContainer = mutableListOf<GenericContainer<*>>()
 

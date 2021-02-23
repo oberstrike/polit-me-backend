@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.transaction.Transactional
 
-@QuarkusTestResource(DockerTestResource::class)
 @QuarkusTest
 @Transactional
 class CommentResourceTest : AbstractRestTest() {

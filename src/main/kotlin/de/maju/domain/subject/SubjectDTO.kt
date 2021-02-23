@@ -3,6 +3,7 @@ package de.maju.domain.subject
 import com.maju.openapi.annotations.OASSchema
 import de.maju.domain.question.QuestionDTO
 import org.eclipse.microprofile.openapi.annotations.media.Schema
+import org.jboss.resteasy.annotations.Query
 import javax.enterprise.context.ApplicationScoped
 
 

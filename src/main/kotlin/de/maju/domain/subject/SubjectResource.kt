@@ -1,6 +1,8 @@
 package de.maju.domain.subject
 
 import de.maju.domain.question.QuestionDTO
+import de.maju.util.PagedRequest
+import de.maju.util.SortedRequest
 import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
@@ -19,15 +21,15 @@ class SubjectResource(
     @GET
     @Produces(value = ["application/json"])
     fun getSubjectsByQuery(
-        @QueryParam("sort") sort: String?,
-        @QueryParam("dir") dir: String?,
-        @QueryParam("page") page: Int?,
-        @QueryParam("pageSize") pageSize: Int?
+        @BeanParam sortedRequest: SortedRequest,
+        @BeanParam pagedRequest: PagedRequest,
+        @BeanParam subjectBeanParam: SubjectBeanParam
     ) = subjectService.getSubjectsByQuery(
-        page = page ?: 0,
-        pageSize = pageSize ?: 10,
-        sort = sort ?: "id",
-        direction = dir ?: "asc"
+        page = pagedRequest.page,
+        pageSize = if( pagedRequest.pageSize <= 0) 10 else pagedRequest.pageSize,
+        sort = sortedRequest.sort,
+        direction = sortedRequest.direction,
+        query = subjectBeanParam
     )
 
 
@@ -82,10 +84,9 @@ class SubjectResource(
     @Path(value = "/id/{id}/questions")
     fun getQuestionsBySubjectId(
         @PathParam("id") id: Long,
-        @QueryParam("page") page: Int?,
-        @QueryParam("pageSize")  pageSize: Int?
+        @BeanParam pagedRequest: PagedRequest
     ): List<QuestionDTO> {
-        return subjectService.getQuestionsBySubjectId(id, page ?: 1, pageSize ?: 20)
+        return subjectService.getQuestionsBySubjectId(id, pagedRequest.page ?: 1, pagedRequest.pageSize ?: 20)
     }
 
 

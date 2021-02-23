@@ -31,7 +31,7 @@ class SubjectController {
     }
 
 
-    fun getAll(): List<SubjectDTO>? {
+    fun getSubjectsByQuery(): List<SubjectDTO>? {
         val response = controller.sendGet("/api/subjects")
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
