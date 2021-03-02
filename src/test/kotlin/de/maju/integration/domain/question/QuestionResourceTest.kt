@@ -1,11 +1,11 @@
-package de.maju.rest.domain.question
+package de.maju.integration.domain.question
 
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.question.QuestionDTO
+import de.maju.integration.Integration
 import de.maju.rest.util.AbstractRestTest
-import de.maju.rest.util.DockerTestResource
-import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -13,8 +13,7 @@ import javax.transaction.Transactional
 
 @QuarkusTest
 @Transactional
-@QuarkusTestResource(DockerTestResource::class)
-
+@TestProfile(Integration::class)
 class QuestionResourceTest : AbstractRestTest() {
 
     @AfterEach
@@ -45,7 +44,6 @@ class QuestionResourceTest : AbstractRestTest() {
     fun updateQuestionTest() {
         withQuestion { question, _ ->
             val owner = "oberstrike"
-            val size = 1
             val toUpdate = question.copy(owner = owner)
 
             val updated = questionController.updateQuestion(toUpdate)
@@ -101,9 +99,10 @@ class QuestionResourceTest : AbstractRestTest() {
 
     @Test
     fun addFileToQuestionTest() {
-        withQuestion { question, subject ->
-            val filename = "MeinTraum.pdf"
-            val result = question.id?.let { questionController.addFileToQuestionById(it, filename) }
+        withQuestion { question, _ ->
+            val filename = "MeinTraum.mp4"
+            val content = ByteArray(1111)
+            val result = question.id?.let { questionController.setFileToQuestionById(it, content, filename) }
             if (result != null) {
                 Assertions.assertTrue(result)
             } else {
@@ -111,6 +110,31 @@ class QuestionResourceTest : AbstractRestTest() {
             }
         }
 
+    }
+
+    @Test
+    fun addFileToQuestionWithWrongExtensionTest() {
+        withQuestion { question, _ ->
+            val filename = "MeinTraum.pdf"
+            val content = ByteArray(1111)
+
+            val result = question.id?.let { questionController.setFileToQuestionById(it, content, filename) }
+            if (result != null) {
+                Assertions.assertTrue(!result)
+            }
+        }
+    }
+
+    @Test
+    fun addFileToQuestionWithRightExtensionButWrongSizeTest() {
+        withQuestion { question, _ ->
+            val filename = "MeinTraum.mp4"
+            val content = ByteArray(25 * 1024 * 1024 * 4)
+
+            Assertions.assertThrows(Exception::class.java){
+                question.id?.let { questionController.setFileToQuestionById(it, content, filename) }
+            }
+        }
     }
 
     @Test

@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.allopen") version "1.4.20"
     kotlin("kapt") version "1.4.20"
     id("io.quarkus")
+    id("com.diffplug.gradle.spotless") version "3.16.0"
 }
 
 repositories {
@@ -55,6 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.15.1")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.quarkus:quarkus-keycloak-admin-client")
+    testImplementation("io.quarkus:quarkus-test-h2")
 
     val junitJupiterVersion = "5.7.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
@@ -72,6 +74,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+
+
 allOpen {
     annotation("javax.ws.rs.Path")
     annotation("javax.enterprise.context.ApplicationScoped")
@@ -82,4 +86,13 @@ allOpen {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     kotlinOptions.javaParameters = true
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint("0.31.0").userData(mapOf("indent_size" to "2"))
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }

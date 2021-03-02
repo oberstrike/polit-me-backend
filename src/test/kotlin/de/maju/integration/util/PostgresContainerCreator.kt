@@ -1,4 +1,4 @@
-package de.maju.rest.util
+package de.maju.integration.util
 
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding

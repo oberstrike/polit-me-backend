@@ -3,22 +3,23 @@ package de.maju.rest.util
 
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.comments.CommentRepositoryProxy
-import de.maju.rest.domain.comment.CommentController
+import de.maju.integration.domain.comment.CommentController
 import de.maju.domain.datafile.DataFileDTO
-import de.maju.rest.domain.question.QuestionController
-import de.maju.rest.domain.subject.SubjectController
+import de.maju.integration.domain.question.QuestionController
+import de.maju.integration.domain.subject.SubjectController
 import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionService
+import de.maju.domain.subject.SubjectCreateDTO
 import de.maju.domain.subject.SubjectDTO
 import de.maju.domain.subject.SubjectService
-import de.maju.rest.util.keycloak.JWTToken
-import de.maju.rest.util.keycloak.KeyCloakService
-import de.maju.rest.util.keycloak.UserDTO
-import de.maju.rest.util.keycloak.getLogInForm
+import de.maju.integration.util.UserAuthClient
+import de.maju.integration.util.keycloak.JWTToken
+import de.maju.integration.util.keycloak.KeyCloakService
+import de.maju.integration.util.keycloak.UserDTO
+import de.maju.integration.util.keycloak.getLogInForm
 import org.eclipse.microprofile.rest.client.inject.RestClient
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions
-import java.util.*
 import javax.inject.Inject
 import javax.transaction.Transactional
 import javax.ws.rs.core.Form
@@ -59,7 +60,8 @@ abstract class AbstractRestTest {
     )
 
     private fun addSubjectDTO(subject: SubjectDTO): SubjectDTO {
-        return subjectController.addSubjectDTO(subject)!!
+        val subjectCreateDTO = SubjectCreateDTO(subject.content, headline = "Frieden")
+        return subjectController.addSubjectDTO(subjectCreateDTO)!!
     }
 
     fun withLoggedIn(
@@ -144,7 +146,7 @@ object TestHelper {
 
     fun createCommentDTO() = CommentDTO(content = "Comment ${Random.nextInt(100)}")
 
-    fun createDataFileDTO(size: Int = Random.nextInt(100)) =
+    fun createDataFileDTO() =
         DataFileDTO(name = "test.png", extension = "png")
 
 }

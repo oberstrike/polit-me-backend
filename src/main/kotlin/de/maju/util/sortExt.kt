@@ -9,3 +9,4 @@ object Direction {
         return if (abbreviation == "desc") Sort.Direction.Descending else Sort.Direction.Ascending
     }
 }
+

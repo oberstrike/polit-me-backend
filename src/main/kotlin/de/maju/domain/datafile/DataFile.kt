@@ -7,7 +7,6 @@ import javax.persistence.*
 @Entity
 class DataFile : PanacheEntity() {
 
-
     @OneToOne(fetch = FetchType.LAZY,
         cascade = [CascadeType.REMOVE, CascadeType.REFRESH],
         orphanRemoval = true)

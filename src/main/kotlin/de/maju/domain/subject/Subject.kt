@@ -1,5 +1,6 @@
 package de.maju.domain.subject
 
+import de.maju.domain.admin.KeycloakUser
 import de.maju.domain.question.Question
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
 import java.time.LocalDateTime
@@ -10,6 +11,8 @@ import javax.persistence.OneToMany
 
 @Entity
 data class Subject(
+    var headline: String = "",
+    var content: String = "",
     var created: LocalDateTime = LocalDateTime.now(),
     @OneToMany(
         mappedBy = "subject",
@@ -17,13 +20,7 @@ data class Subject(
         orphanRemoval = true
     )
     var questions: MutableList<Question> = mutableListOf(),
-    var content: String = "",
-    var headline: String = "",
     var isDeleted: Boolean = false,
-    var isPublic: Boolean = false
-) : PanacheEntity() {
-
-
-}
-
-
+    var isPublic: Boolean = false,
+    val owner: KeycloakUser? = null
+) : PanacheEntity()

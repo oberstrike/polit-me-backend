@@ -11,6 +11,7 @@ data class Comment(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keycloakUser_id")
     var keycloakUser: KeycloakUser? = null,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.REFRESH, CascadeType.PERSIST])
     @JoinColumn(name = "question_id")
     var question: Question? = null,

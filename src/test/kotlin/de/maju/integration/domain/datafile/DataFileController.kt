@@ -1,15 +1,12 @@
-package de.maju.rest.domain.datafile
+package de.maju.integration.domain.datafile
 
-import de.maju.domain.comments.CommentDTO
-import de.maju.domain.comments.commentPath
 import de.maju.domain.datafile.DataFileDTO
 import de.maju.domain.datafile.dataFilePath
-import de.maju.rest.domain.question.fromJson
+import de.maju.integration.domain.question.fromJson
 import de.maju.rest.util.Controller
 import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-import javax.ws.rs.QueryParam
 
 @ApplicationScoped
 class DataFileController {

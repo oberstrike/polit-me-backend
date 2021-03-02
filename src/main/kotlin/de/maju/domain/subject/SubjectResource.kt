@@ -25,10 +25,8 @@ class SubjectResource(
         @BeanParam pagedRequest: PagedRequest,
         @BeanParam subjectBeanParam: SubjectBeanParam
     ) = subjectService.getSubjectsByQuery(
-        page = pagedRequest.page,
-        pageSize = if( pagedRequest.pageSize <= 0) 10 else pagedRequest.pageSize,
-        sort = sortedRequest.sort,
-        direction = sortedRequest.direction,
+        sortedRequest = sortedRequest,
+        pagedRequest = pagedRequest,
         query = subjectBeanParam
     )
 
@@ -48,9 +46,9 @@ class SubjectResource(
             Content(mediaType = MediaType.APPLICATION_JSON)
         ]
     )
-    fun addSubject(@Parameter(schema = Schema(implementation = SubjectDTO::class)) subjectDTO: SubjectDTO): SubjectDTO {
-        if (subjectDTO.id != null) throw BadRequestException("The parameter id is accidentally not null.")
-        return subjectService.add(subjectDTO)
+    fun addSubject(@Parameter(schema = Schema(implementation = SubjectCreateDTO::class)) subjectCreateDTO: SubjectCreateDTO): SubjectDTO
+    {
+        return subjectService.add(subjectCreateDTO)
     }
 
     @DELETE
@@ -86,7 +84,7 @@ class SubjectResource(
         @PathParam("id") id: Long,
         @BeanParam pagedRequest: PagedRequest
     ): List<QuestionDTO> {
-        return subjectService.getQuestionsBySubjectId(id, pagedRequest.page ?: 1, pagedRequest.pageSize ?: 20)
+        return subjectService.getQuestionsBySubjectId(id, pagedRequest.page, pagedRequest.pageSize)
     }
 
 

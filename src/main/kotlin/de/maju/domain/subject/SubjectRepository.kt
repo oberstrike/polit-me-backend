@@ -2,8 +2,9 @@ package de.maju.domain.subject
 
 import com.maju.annotations.RepositoryProxy
 import de.maju.util.Direction
-import de.maju.util.ParamCreator
+import de.maju.util.PagedRequest
 import de.maju.util.QueryCreator
+import de.maju.util.SortedRequest
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -14,23 +15,20 @@ import javax.enterprise.context.ApplicationScoped
     converter = SubjectMapper::class
 )
 class SubjectRepository(
-    private val subjectPanacheParamCreator: SubjectPanacheParamCreator,
-    private val paramCreator: QueryCreator
+    private val subjectPanacheParamCreator: SubjectPanacheParamCreator
 ) : PanacheRepository<Subject> {
 
     fun findByQuery(
-        sort: String,
-        direction: String,
-        page: Int,
-        pageSize: Int,
+        sortedRequest: SortedRequest,
+        pagedRequest: PagedRequest,
         subjectBeanParam: SubjectBeanParam
     ): List<Subject> {
-        val sorting = Sort.by(sort, Direction.ofAbbreviation(direction))
-        val paging = Page.of(page, pageSize)
+        val sorting = Sort.by(sortedRequest.sort, Direction.ofAbbreviation(sortedRequest.direction))
+        val paging = Page.of(pagedRequest.page, pagedRequest.pageSize)
         val params = subjectPanacheParamCreator.createParams(subjectBeanParam)
 
         if (params.isNotEmpty()) {
-            val query = paramCreator.createQuery(params)
+            val query = QueryCreator.createQuery(params)
             if (query != null) {
                 return find(query, sorting, params).page(paging).list()
             }

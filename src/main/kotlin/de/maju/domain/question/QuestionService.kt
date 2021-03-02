@@ -50,6 +50,12 @@ class QuestionService {
 
     @Transactional
     fun setDataFileToQuestionById(questionId: Long, dataFile: DataFileDTO, byteArray: ByteArray) {
+
+        val validated = dataFileValidator.validate(dataFile)
+
+        if (!validated)
+            throw BadRequestException("There was an error while adding the file ${dataFile.name}")
+
         val question = questionRepository.findById(questionId)
             ?: throw NotFoundException("No question with the ID $questionId was found")
         val oldDataFile = question.dataFile
@@ -68,9 +74,6 @@ class QuestionService {
 
         videoFileService.save(videoFile)
         dataFile.videoFile = videoFile.id
-
-        if (!dataFileValidator.validate(dataFile))
-            throw BadRequestException("There was an error while adding the file ${dataFile.name}")
 
 
         val savedDataFile = dataFileService.save(dataFile)
@@ -150,8 +153,8 @@ class QuestionService {
     }
 
     @Transactional
-    fun findByQuery(page: Int, pageSize: Int, sort: String, dir: String): List<QuestionDTO> {
-        return questionRepositoryProxy.findByQuery(page, pageSize, sort, dir)
+    fun findByQuery(page: Int, pageSize: Int, sort: String, dir: String, questionBeanParam: QuestionBeanParam): List<QuestionDTO> {
+        return questionRepositoryProxy.findByQuery(page, pageSize, sort, dir, questionBeanParam)
     }
 
 

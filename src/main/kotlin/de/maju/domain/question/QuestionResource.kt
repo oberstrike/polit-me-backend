@@ -1,12 +1,11 @@
 package de.maju.domain.question
 
 import com.maju.openapi.annotations.OASParameter
-import com.maju.openapi.annotations.OASPath
-import com.maju.openapi.annotations.OASResource
-import com.maju.openapi.codegen.RequestMethod
 import com.maju.openapi.codegen.generators.annotations.schema.OASBaseSchemaEnum
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.datafile.DataFileDTO
+import de.maju.util.PagedRequest
+import de.maju.util.SortedRequest
 import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal
 import io.quarkus.security.Authenticated
 import io.quarkus.security.identity.SecurityIdentity
@@ -17,7 +16,6 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput
 import java.io.InputStream
 import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.MultivaluedMap
 import javax.ws.rs.core.Response
 
@@ -44,12 +42,17 @@ class QuestionResource(
     @GET
     @Produces(value = ["application/json"])
     fun findQuestionByQuery(
-        @QueryParam("page") @DefaultValue("0") page: Int?,
-        @QueryParam("pageSize") pageSize: Int?,
-        @QueryParam("sort") sort: String?,
-        @QueryParam("dir") dir: String?
+        @BeanParam sortedRequest: SortedRequest,
+        @BeanParam pagedRequest: PagedRequest,
+        @BeanParam questionBeanParam: QuestionBeanParam
     ): List<QuestionDTO> {
-        return questionService.findByQuery(page ?: 0, pageSize ?: 10, sort ?: "id", dir ?: "asc")
+        return questionService.findByQuery(
+            pagedRequest.page,
+            pagedRequest.pageSize,
+            sortedRequest.sort,
+            sortedRequest.direction,
+            questionBeanParam
+        )
     }
 
 
@@ -57,7 +60,7 @@ class QuestionResource(
     @Produces(value = ["application/json"])
     @Consumes(value = ["multipart/form-data"])
     @Path(value = "/id/{id}/file")
-    fun addFileToQuestionById(
+    fun setFileToQuestionById(
         @PathParam("id") id: Long,
         @MultipartForm @OASParameter(baseSchema = OASBaseSchemaEnum.FILE) multipartBody: MultipartFormDataInput
     ): Response {
@@ -71,14 +74,14 @@ class QuestionResource(
             val fileExtension = filename.substringAfter('.', "")
 
             val input = it.getBody(InputStream::class.java, null)
-            val byteArray = IOUtils.toByteArray(input)
+            val contentAsByteArray = IOUtils.toByteArray(input)
 
             val dataFile = DataFileDTO(
                 name = filename,
                 extension = fileExtension
             )
 
-            questionService.setDataFileToQuestionById(id, dataFile, byteArray)
+            questionService.setDataFileToQuestionById(id, dataFile, contentAsByteArray)
         }
         return Response.ok().build()
     }
@@ -114,7 +117,8 @@ class QuestionResource(
     @Path(value = "/id/{id}/comments")
     @Authenticated
     fun addCommentToQuestionById(@PathParam("id") id: Long, commentDTO: CommentDTO): QuestionDTO {
-        val userId = (securityIdentity.principal as OidcJwtCallerPrincipal).claims.getClaimValueAsString("sub")
+        val userId =
+            (securityIdentity.principal as OidcJwtCallerPrincipal).claims.getClaimValueAsString("sub")
         return questionService.addCommentToQuestionById(id, commentDTO, userId)
     }
 

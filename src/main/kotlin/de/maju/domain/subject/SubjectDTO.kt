@@ -12,10 +12,16 @@ import javax.enterprise.context.ApplicationScoped
 data class SubjectDTO(
     override val content: String,
     override val id: Long? = null,
-    override var headline: String = "",
-    override val questions: MutableList<QuestionDTO> = mutableListOf(),
+    override var headline: String? = null,
+    override var questions: MutableList<QuestionDTO> = mutableListOf(),
     override val deleted: Boolean = false,
     override var isPublic: Boolean = false,
     override var created: Long = 0
 ) : ISubjectDTO
 
+@OASSchema("SubjectCreate")
+@Schema(name =" SubjectCreate")
+data class SubjectCreateDTO(
+    override val content: String,
+    override val headline: String
+): ISubjectCreateDTO

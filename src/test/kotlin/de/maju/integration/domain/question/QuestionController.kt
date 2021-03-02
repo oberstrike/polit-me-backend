@@ -1,12 +1,10 @@
-package de.maju.rest.domain.question
+package de.maju.integration.domain.question
 
 import de.maju.domain.comments.CommentDTO
 import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.questionPath
 import de.maju.rest.util.Controller
 import io.restassured.builder.MultiPartSpecBuilder
-import io.restassured.http.ContentType
-import javax.activation.MimeType
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.ws.rs.core.MediaType
@@ -60,8 +58,9 @@ class QuestionController {
         return controller.fromJson(response.asString())
     }
 
-    fun addFileToQuestionById(id: Long, name: String): Boolean {
-        val multiPartFile = MultiPartSpecBuilder(ByteArray(11))
+    fun setFileToQuestionById(id: Long, content: ByteArray, name: String): Boolean {
+
+        val multiPartFile = MultiPartSpecBuilder(content)
             .fileName(name)
             .controlName("content")
             .mimeType(MediaType.MULTIPART_FORM_DATA)

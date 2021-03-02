@@ -1,16 +1,17 @@
-package de.maju.rest.domain.comment
+package de.maju.integration.domain.comment
 
+import de.maju.integration.Integration
 import de.maju.rest.util.AbstractRestTest
-import de.maju.rest.util.DockerTestResource
 import de.maju.rest.util.TestHelper
-import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.transaction.Transactional
 
 @QuarkusTest
 @Transactional
+@TestProfile(Integration::class)
 class CommentResourceTest : AbstractRestTest() {
 
     @Test

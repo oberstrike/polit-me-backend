@@ -7,23 +7,14 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class DataFileValidator(
-    @ConfigProperty(name = "validator.datafile.maxFileSize") private val maxFileSizeString: String,
+    @ConfigProperty(name = "datafile.validator.extensions")
+    extensionProperty: String
 ) : Validator<DataFileDTO> {
 
-    private val maxFileSize = DataSize.parse(maxFileSizeString)
+    val extensions = extensionProperty.split(',').map { it.trim() }
 
     override fun validate(target: DataFileDTO): Boolean {
-        if (target.videoFile == null) {
-            return false
-        }
-
-
-        if (target.name.length < 0) {
-            return false
-        }
-
-
-        return true
+        return target.name.length < 0 || extensions.contains(target.extension)
     }
 
 }

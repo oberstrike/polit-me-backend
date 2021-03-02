@@ -1,11 +1,12 @@
-package de.maju.rest.domain.subject
+package de.maju.integration.domain.subject
 
 import de.maju.domain.question.QuestionDTO
+import de.maju.domain.subject.SubjectCreateDTO
 import de.maju.domain.subject.SubjectDTO
+import de.maju.integration.Integration
 import de.maju.rest.util.AbstractRestTest
-import de.maju.rest.util.DockerTestResource
-import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ import javax.transaction.Transactional
 
 @QuarkusTest
 @Transactional
+@TestProfile(Integration::class)
 class SubjectResourceTest : AbstractRestTest() {
 
 
@@ -28,7 +30,7 @@ class SubjectResourceTest : AbstractRestTest() {
         assert(getAll!!.isEmpty())
 
         val content = "Content123"
-        val added = subjectController.addSubjectDTO(SubjectDTO(content = content))
+        val added = subjectController.addSubjectDTO(SubjectCreateDTO(content = content, headline = "Frieden"))
         Assertions.assertNotNull(added)
         assert(added!!.content == content)
 
@@ -40,19 +42,27 @@ class SubjectResourceTest : AbstractRestTest() {
     }
 
     @Test
-    fun addNewSubjectDTOAndTryToPurge() {
-        val subjectDTO = SubjectDTO(content = "content")
+    fun addNewSubjectDTOAndDeleteItAndTryToPurge() {
+        val subjectDTO = SubjectCreateDTO(content = "content", headline = "Frieden")
         val oldSubjectDTO = subjectController.addSubjectDTO(subjectDTO)
-        val id = oldSubjectDTO!!.id!!
+        Assertions.assertTrue(!oldSubjectDTO!!.deleted)
+        val id = oldSubjectDTO.id!!
 
-        val purgeById = subjectController.purgeById(id)
-        assert(purgeById != 204)
+        val purgeByIdStatusCode = subjectController.purgeById(id)
+        Assertions.assertEquals( 400, purgeByIdStatusCode)
+
+        val newSubjectDTOs = subjectController.getSubjectsByQuery(id)
+        Assertions.assertNotNull(newSubjectDTOs)
+        Assertions.assertEquals(1, newSubjectDTOs!!.size)
+
+        val newSubjectDTO = newSubjectDTOs[0]
+        Assertions.assertEquals(false, newSubjectDTO.deleted)
     }
 
 
     @Test
     fun addNewSubjectDeleteItAndPurgeItTest() {
-        val subjectDTO = SubjectDTO(content = "content")
+        val subjectDTO = SubjectCreateDTO(content = "content", headline = "Frieden")
         val oldSubjectDTO = subjectController.addSubjectDTO(subjectDTO)
 
         val all = subjectController.getSubjectsByQuery()

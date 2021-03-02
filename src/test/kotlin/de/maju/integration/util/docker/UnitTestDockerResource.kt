@@ -1,18 +1,12 @@
-package de.maju.rest.util
+package de.maju.integration.util.docker
 
-import de.maju.rest.util.keycloak.KeycloakContainerCreator
+import de.maju.integration.util.IContainerCreator
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
 
-class DockerTestResource : QuarkusTestResourceLifecycleManager {
+class UnitTestDockerResource: QuarkusTestResourceLifecycleManager {
 
-
-    private val listOfContainerCreator = listOf(
-        PostgresContainerCreator(),
-        KeycloakContainerCreator()
-    )
-
-//    private val listOfContainerCreator = emptyList<IContainerCreator<*>>()
+    private val listOfContainerCreator = emptyList<IContainerCreator<*>>()
 
     private val listOfContainer = mutableListOf<GenericContainer<*>>()
 
@@ -48,6 +42,4 @@ class DockerTestResource : QuarkusTestResourceLifecycleManager {
             println("Stopped ${container.getDockerImageName()}")
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-package de.maju.rest.domain.subject
+package de.maju.integration.domain.subject
 
 import org.junit.jupiter.api.Test
 

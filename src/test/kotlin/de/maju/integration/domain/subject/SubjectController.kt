@@ -1,7 +1,8 @@
-package de.maju.rest.domain.subject
+package de.maju.integration.domain.subject
 
-import de.maju.rest.domain.question.fromJson
+import de.maju.integration.domain.question.fromJson
 import de.maju.domain.question.QuestionDTO
+import de.maju.domain.subject.SubjectCreateDTO
 import de.maju.domain.subject.SubjectDTO
 import de.maju.domain.subject.SubjectRepository
 import de.maju.rest.util.Controller
@@ -31,15 +32,17 @@ class SubjectController {
     }
 
 
-    fun getSubjectsByQuery(): List<SubjectDTO>? {
-        val response = controller.sendGet("/api/subjects")
+    fun getSubjectsByQuery(id: Long? = null): List<SubjectDTO>? {
+        val response = controller.sendGet("/api/subjects", params =
+            if(id != null) mapOf("id" to id) else null
+        )
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
         val json = response.body.asString()
         return controller.fromJson<Array<SubjectDTO>>(json).toList()
     }
 
-    fun addSubjectDTO(subjectDTO: SubjectDTO): SubjectDTO? {
+    fun addSubjectDTO(subjectDTO: SubjectCreateDTO): SubjectDTO? {
         val response = controller.sendPost("/api/subjects", body = controller.toJson(subjectDTO), file = null)
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
@@ -79,6 +82,7 @@ class SubjectController {
         val responseJson = response.body.asString()
         return controller.fromJson(responseJson)
     }
+
 
     fun getQuestionsBySubjectId(subjectDTO: SubjectDTO): List<QuestionDTO>?{
         val response = controller.sendGet("/api/subjects/id/${subjectDTO.id}/questions")

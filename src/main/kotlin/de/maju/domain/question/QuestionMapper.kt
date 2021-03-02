@@ -10,9 +10,12 @@ import org.mapstruct.Mapping
 import org.mapstruct.Mappings
 
 @Mapper(
-    uses = [QuestionAfterMapper::class,
+    uses = [
+        QuestionAfterMapper::class,
         LocalDateTimeMapper::class,
-        CommentMapper::class, DataFileMapper::class],
+        CommentMapper::class,
+        DataFileMapper::class
+    ],
     componentModel = "cdi",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
