@@ -1,6 +1,6 @@
 package de.maju.domain.subject
 
-import com.maju.utils.IConverter
+import com.maju.annotations.IConverter
 import de.maju.domain.question.Question
 import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionMapper

@@ -11,7 +11,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 @ApplicationScoped
-@RepositoryProxy(converter = QuestionMapper::class)
+@RepositoryProxy(converters = [QuestionMapper::class])
 class QuestionRepository : PanacheRepository<Question> {
 
     @Inject

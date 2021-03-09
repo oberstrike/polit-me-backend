@@ -1,6 +1,6 @@
 package de.maju.domain.datafile
 
-import com.maju.utils.IConverter
+import com.maju.annotations.IConverter
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping

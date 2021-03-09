@@ -21,6 +21,5 @@ data class Subject(
     )
     var questions: MutableList<Question> = mutableListOf(),
     var isDeleted: Boolean = false,
-    var isPublic: Boolean = false,
-    val owner: KeycloakUser? = null
+    var isPublic: Boolean = false
 ) : PanacheEntity()

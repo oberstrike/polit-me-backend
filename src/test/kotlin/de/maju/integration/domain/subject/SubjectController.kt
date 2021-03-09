@@ -6,6 +6,7 @@ import de.maju.domain.subject.SubjectCreateDTO
 import de.maju.domain.subject.SubjectDTO
 import de.maju.domain.subject.SubjectRepository
 import de.maju.rest.util.Controller
+import de.maju.util.PagedResponse
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 import javax.transaction.Transactional
@@ -32,14 +33,14 @@ class SubjectController {
     }
 
 
-    fun getSubjectsByQuery(id: Long? = null): List<SubjectDTO>? {
+    fun getSubjectsByQuery(id: Long? = null): PagedResponse<SubjectDTO>? {
         val response = controller.sendGet("/api/subjects", params =
             if(id != null) mapOf("id" to id) else null
         )
         val statusCode = response.statusCode()
         if(statusCode != 200) return null
         val json = response.body.asString()
-        return controller.fromJson<Array<SubjectDTO>>(json).toList()
+        return controller.fromJson<PagedResponse<SubjectDTO>>(json)
     }
 
     fun addSubjectDTO(subjectDTO: SubjectCreateDTO): SubjectDTO? {

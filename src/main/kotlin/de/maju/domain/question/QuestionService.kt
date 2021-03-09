@@ -117,7 +117,7 @@ class QuestionService {
 
         try {
             val user = userRepository.find("userid", userId).firstResult()
-            val comment = commentRepositoryProxy.converter.convertDTOToModel(commentDTO)
+            val comment = commentRepositoryProxy.commentMapper.convertDTOToModel(commentDTO)
             comment.keycloakUser = user
             question.comments.add(comment)
             comment.question = question
@@ -127,7 +127,7 @@ class QuestionService {
         }
 
 
-        return questionRepositoryProxy.converter.convertModelToDTO(question)
+        return questionRepositoryProxy.questionMapper.convertModelToDTO(question)
     }
 
     @Transactional

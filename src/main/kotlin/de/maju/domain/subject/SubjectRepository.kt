@@ -5,6 +5,7 @@ import de.maju.util.Direction
 import de.maju.util.PagedRequest
 import de.maju.util.QueryCreator
 import de.maju.util.SortedRequest
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheQuery
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -12,17 +13,18 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 @RepositoryProxy(
-    converter = SubjectMapper::class
+    converters = [SubjectMapper::class]
 )
 class SubjectRepository(
     private val subjectPanacheParamCreator: SubjectPanacheParamCreator
 ) : PanacheRepository<Subject> {
 
+
     fun findByQuery(
         sortedRequest: SortedRequest,
         pagedRequest: PagedRequest,
         subjectBeanParam: SubjectBeanParam
-    ): List<Subject> {
+    ): PanacheQuery<Subject> {
         val sorting = Sort.by(sortedRequest.sort, Direction.ofAbbreviation(sortedRequest.direction))
         val paging = Page.of(pagedRequest.page, pagedRequest.pageSize)
         val params = subjectPanacheParamCreator.createParams(subjectBeanParam)
@@ -30,23 +32,24 @@ class SubjectRepository(
         if (params.isNotEmpty()) {
             val query = QueryCreator.createQuery(params)
             if (query != null) {
-                return find(query, sorting, params).page(paging).list()
+                return find(query, sorting, params).page(paging)
             }
         }
-        return findAll(sorting).page(paging).list()
+        return findAll(sorting).page(paging)
     }
 
     fun save(subject: Subject): Subject {
         val old = subject.id?.let { findById(it) }
 
         if (old != null) {
-            old.isDeleted = subject.isDeleted
-            old.headline = subject.headline
-            old.content = subject.content
-            for (question in subject.questions) {
-                old.questions.add(question)
+            with(old) {
+                isDeleted = subject.isDeleted
+                headline = subject.headline
+                content = subject.content
+                for (question in subject.questions) {
+                    questions.add(question)
+                }
             }
-
             persist(old)
             flush()
             return old

@@ -27,7 +27,7 @@ class SubjectResource(
     ) = subjectService.getSubjectsByQuery(
         sortedRequest = sortedRequest,
         pagedRequest = pagedRequest,
-        query = subjectBeanParam
+        subjectBeanParam = subjectBeanParam
     )
 
 

@@ -27,7 +27,7 @@ class SubjectResourceTest : AbstractRestTest() {
     @Test
     fun addNewSubjectAndListAllTest() {
         val getAll = subjectController.getSubjectsByQuery()
-        assert(getAll!!.isEmpty())
+        assert(getAll!!.content.isEmpty())
 
         val content = "Content123"
         val added = subjectController.addSubjectDTO(SubjectCreateDTO(content = content, headline = "Frieden"))
@@ -37,9 +37,10 @@ class SubjectResourceTest : AbstractRestTest() {
         val getAllWithAddedSubject = subjectController.getSubjectsByQuery()
         assert(getAllWithAddedSubject != null)
 
-        assert(getAllWithAddedSubject!!.isNotEmpty())
-        assert(getAllWithAddedSubject.size == 1)
+        assert(getAllWithAddedSubject!!.content.isNotEmpty())
+        assert(getAllWithAddedSubject.content.size == 1)
     }
+
 
     @Test
     fun addNewSubjectDTOAndDeleteItAndTryToPurge() {
@@ -53,10 +54,10 @@ class SubjectResourceTest : AbstractRestTest() {
 
         val newSubjectDTOs = subjectController.getSubjectsByQuery(id)
         Assertions.assertNotNull(newSubjectDTOs)
-        Assertions.assertEquals(1, newSubjectDTOs!!.size)
+        Assertions.assertEquals(1, newSubjectDTOs!!.content.size)
 
-        val newSubjectDTO = newSubjectDTOs[0]
-        Assertions.assertEquals(false, newSubjectDTO.deleted)
+        val newSubjectDTO = (newSubjectDTOs.content)[0] as LinkedHashMap<*, *>
+        Assertions.assertTrue(!(newSubjectDTO["deleted"] as Boolean))
     }
 
 
@@ -65,9 +66,8 @@ class SubjectResourceTest : AbstractRestTest() {
         val subjectDTO = SubjectCreateDTO(content = "content", headline = "Frieden")
         val oldSubjectDTO = subjectController.addSubjectDTO(subjectDTO)
 
-        val all = subjectController.getSubjectsByQuery()
-        assert(all!!.isNotEmpty())
-        assert(all.contains(oldSubjectDTO))
+        val all = subjectController.getSubjectsByQuery()!!.content
+        Assertions.assertTrue(all.isNotEmpty())
 
         val id = oldSubjectDTO!!.id!!
 
@@ -142,5 +142,6 @@ class SubjectResourceTest : AbstractRestTest() {
 
         }
     }
+
 
 }

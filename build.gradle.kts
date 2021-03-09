@@ -21,8 +21,8 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
     implementation("com.maju.openapi:oas-generator:1.0.3")
     kapt("com.maju.openapi:oas-generator:1.0.3")
-    implementation("com.maju.proxy:proxy-generator:1.0.5")
-    kapt("com.maju.proxy:proxy-generator:1.0.5")
+    implementation("com.maju.proxy:proxy-generator:1.0.8")
+    kapt("com.maju.proxy:proxy-generator:1.0.8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.0")
 
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))

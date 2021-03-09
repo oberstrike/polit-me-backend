@@ -4,6 +4,7 @@ import de.maju.domain.question.QuestionDTO
 import de.maju.domain.question.QuestionRepository
 import de.maju.domain.question.QuestionRepositoryProxy
 import de.maju.util.PagedRequest
+import de.maju.util.PagedResponse
 import de.maju.util.SortedRequest
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class SubjectService {
     @Inject
     lateinit var subjectCreateMapper: SubjectCreateMapper
 
+    @Inject
+    lateinit var subjectMapper: SubjectMapper
+
     fun findById(id: Long): SubjectDTO? {
         return subjectRepositoryProxy.findById(id)
     }
@@ -46,7 +50,7 @@ class SubjectService {
 
         subject.isDeleted = true
         subjectRepository.persist(subject)
-        return subjectRepositoryProxy.converter.convertModelToDTO(subject)
+        return subjectRepositoryProxy.subjectMapper.convertModelToDTO(subject)
     }
 
     @Transactional
@@ -78,7 +82,7 @@ class SubjectService {
 
         if (questionDTO.id != null) throw BadRequestException("The requested question has already an ID.")
 
-        val oldQuestion = questionRepositoryProxy.converter.convertDTOToModel(questionDTO)
+        val oldQuestion = questionRepositoryProxy.questionMapper.convertDTOToModel(questionDTO)
         oldQuestion.subject = subject
         questionRepository.save(oldQuestion)
 
@@ -95,13 +99,30 @@ class SubjectService {
         subjectRepository.purgeAll()
     }
 
+    fun getPagedResponse(
+        subjects: List<SubjectDTO>,
+        page: Int,
+        pageCount: Int
+    ): PagedResponse<SubjectDTO> {
+        return PagedResponse(
+            content = subjects,
+            page = page,
+            pageCount = pageCount
+        )
+    }
+
     @Transactional
     fun getSubjectsByQuery(
         sortedRequest: SortedRequest,
         pagedRequest: PagedRequest,
-        query: SubjectBeanParam
-    ): List<SubjectDTO> {
-        return subjectRepositoryProxy.findByQuery(sortedRequest, pagedRequest, query)
+        subjectBeanParam: SubjectBeanParam
+    ): PagedResponse<SubjectDTO> {
 
+        val result = subjectRepository.findByQuery(sortedRequest, pagedRequest, subjectBeanParam)
+        return getPagedResponse(
+            result.list().map { subjectMapper.convertModelToDTO(it) },
+            pagedRequest.page,
+            result.pageCount()
+        )
     }
 }

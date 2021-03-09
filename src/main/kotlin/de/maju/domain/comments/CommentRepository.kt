@@ -6,7 +6,7 @@ import io.quarkus.panache.common.Page
 import javax.enterprise.context.ApplicationScoped
 
 @RepositoryProxy(
-    converter = CommentMapper::class
+    converters = [CommentMapper::class]
 )
 @ApplicationScoped
 class CommentRepository : PanacheRepository<Comment> {

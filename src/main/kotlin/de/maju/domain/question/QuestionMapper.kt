@@ -1,6 +1,6 @@
 package de.maju.domain.question
 
-import com.maju.utils.IConverter
+import com.maju.annotations.IConverter
 import de.maju.domain.comments.CommentMapper
 import de.maju.domain.datafile.DataFileMapper
 import de.maju.util.LocalDateTimeMapper

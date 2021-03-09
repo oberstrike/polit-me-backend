@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 @RepositoryProxy(
-    converter = DataFileMapper::class
+    converters = [DataFileMapper::class]
 )
 class DataFileRepository : PanacheRepository<DataFile> {
 
